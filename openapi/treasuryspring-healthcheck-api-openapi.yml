@@ -1,0 +1,117 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Healthcheck API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Check the status of the API
+  name: Healthcheck
+paths:
+  /health:
+    get:
+      description: Perform a health check by returning a JSON response with a status code of 200 (OK).
+      operationId: get.health
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          description: Return HTTP Status Code 200 (OK)
+      security:
+      - bearerAuth: []
+      summary: Perform a Health Check
+      tags:
+      - Healthcheck
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/health' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+      - label: Python
+        lang: Python
+        source: "\nimport requests\n\nurl = 'https://api.treasuryspring.com/api/v1/health'\nheaders = {\n    'accept': 'application/json',\n    'Authorization': 'Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n}\n\nresponse = requests.get(url, headers=headers)\nprint(response.json())\n"
+components:
+  schemas:
+    HealthCheck:
+      description: Response model to validate and return when performing a health check.
+      properties:
+        status:
+          default: OK
+          description: Health Status
+          examples:
+          - OK
+          type: string
+      type: object
+      x-tags:
+      - Healthcheck
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

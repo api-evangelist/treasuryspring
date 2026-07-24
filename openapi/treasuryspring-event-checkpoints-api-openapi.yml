@@ -1,0 +1,422 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Event Checkpoints API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: 'Server-managed cursors for stateless event stream consumers.
+
+
+    In most cases, checkpoints are not needed. If your system can persist data locally (e.g. in a database, file, or key-value store), store the `cursor` value from `GET /event` yourself and pass it as `start_cursor` on the next request.
+
+
+    **When to use checkpoints:**
+
+
+    Use this endpoint if your system runs in an environment that cannot reliably persist state between invocations — for example, a stateless function, a script with no backing store, or a system that delegates position tracking to TreasurySpring entirely.
+
+
+    A checkpoint is a named record stored server-side that remembers where your last successful sync run ended. Instead of storing the cursor yourself, you store it here and retrieve it at the start of each sync run:
+
+
+    1. **Create** a checkpoint once: `PUT /event/checkpoint/{name}` — the cursor is initialised to the current end of the event stream.
+
+    2. **Read** the checkpoint at the start of each sync run: `GET /event/checkpoint/{name}` → `cursor`, `checkpointVersion`.
+
+    3. **Fetch events** from that cursor: `GET /event?start_cursor={cursor}`.
+
+    4. **Advance** the checkpoint after successful processing: `PATCH /event/checkpoint/{name}` with `expectedCheckpointVersion` and `newCursor`. The `checkpointVersion` acts as a safety check — if another process has already advanced the checkpoint since you last read it, the request returns a 409 Conflict with the current state so you can reconcile before retrying.
+
+
+    Checkpoints are scoped to the authenticated API user.'
+  name: Event Checkpoints
+paths:
+  /event/checkpoint:
+    get:
+      description: Return all event checkpoints for the authenticated user, ordered by name.
+      operationId: get.event.checkpoints
+      parameters:
+      - description: Filter checkpoints whose name starts with this prefix
+        in: query
+        name: name_prefix
+        required: false
+        schema:
+          description: Filter checkpoints whose name starts with this prefix
+          type:
+          - string
+          - 'null'
+      - description: Maximum number of checkpoints to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Maximum number of checkpoints to return
+          maximum: 1000
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCheckpointsResponse'
+          description: List of checkpoints for the authenticated user
+      security:
+      - bearerAuth: []
+      summary: List event checkpoints
+      tags:
+      - Event Checkpoints
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/event/checkpoint?limit=100' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /event/checkpoint/{name}:
+    delete:
+      description: 'Delete a named event checkpoint.
+
+
+        If `expected_checkpoint_version` is supplied, the request uses it as an optimistic
+
+        lock and returns 409 Conflict if the checkpoint has been modified since you last read it.'
+      operationId: delete.event.checkpoint
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Optional checkpointVersion from your last read of this checkpoint. If supplied, it is used as an optimistic lock.
+        in: query
+        name: expected_checkpoint_version
+        required: false
+        schema:
+          description: Optional checkpointVersion from your last read of this checkpoint. If supplied, it is used as an optimistic lock.
+          type:
+          - string
+          - 'null'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCheckpointResponse'
+          description: Deletion confirmation
+      security:
+      - bearerAuth: []
+      summary: Delete an event checkpoint
+      tags:
+      - Event Checkpoints
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "curl -X DELETE 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync?expected_checkpoint_version=ec1.abc123.xyz789' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+    get:
+      description: Return a single event checkpoint by name.
+      operationId: get.event.checkpoint
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCheckpointResponse'
+          description: Checkpoint state
+      security:
+      - bearerAuth: []
+      summary: Get an event checkpoint by name
+      tags:
+      - Event Checkpoints
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+    patch:
+      description: 'Advance the checkpoint to a new cursor position.
+
+
+        Supply the `new_cursor` to move to. If you also provide the
+
+        `expected_checkpoint_version` from the last read, the request uses it as an optimistic
+
+        lock and returns 409 Conflict if the checkpoint has changed since you last read it.'
+      operationId: patch.event.checkpoint
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCheckpointBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatchCheckpointResponse'
+          description: Updated checkpoint state
+      security:
+      - bearerAuth: []
+      summary: Advance an event checkpoint cursor
+      tags:
+      - Event Checkpoints
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X PATCH 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"expected_checkpoint_version\": \"ec1.abc123.xyz789\",\n        \"new_cursor\": \"ev1.def456.xyz789\"\n    }'\n"
+    put:
+      description: 'Create a new named event checkpoint, or return the existing one if it already exists.
+
+
+        On creation, the cursor is initialised to initial_cursor if provided, or to the current
+
+        end of the event stream otherwise. initial_cursor is ignored if the checkpoint already exists.'
+      operationId: put.event.checkpoint
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/PutCheckpointBody'
+              - type: 'null'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCheckpointResponse'
+          description: Checkpoint state with created flag
+      security:
+      - bearerAuth: []
+      summary: Create or get an event checkpoint
+      tags:
+      - Event Checkpoints
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"initial_cursor\": \"ev1.abc123.xyz789\"\n    }'\n"
+components:
+  schemas:
+    PatchCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    UpsertCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+        created:
+          description: True if the checkpoint was newly created, False if it already existed
+          type: boolean
+      required:
+      - checkpoint
+      - created
+      type: object
+      x-tags:
+      - Event Checkpoints
+    GetCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    CheckpointRef:
+      properties:
+        name:
+          description: Name of the checkpoint
+          type: string
+        uid:
+          description: Unique identifier of the checkpoint
+          type: string
+      required:
+      - uid
+      - name
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PutCheckpointBody:
+      properties:
+        initial_cursor:
+          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
+          examples:
+          - ev1....
+          type:
+          - string
+          - 'null'
+      type: object
+      x-tags:
+      - Event Checkpoints
+    CheckpointData:
+      properties:
+        checkpointVersion:
+          description: Opaque version token (ec1.*) representing the current state of this checkpoint. Pass this as expected_checkpoint_version when advancing the cursor via PATCH — if the checkpoint has changed since you read it, the request will return 409 Conflict.
+          examples:
+          - ec1....
+          type: string
+        cursor:
+          description: Opaque cursor token (ev1.*) pointing to the current stream position
+          examples:
+          - ev1....
+          type: string
+        name:
+          description: Checkpoint name
+          examples:
+          - my-checkpoint
+          type: string
+        uid:
+          description: Unique identifier for the checkpoint
+          examples:
+          - 01JKXYZ...
+          type: string
+        updatedAt:
+          description: ISO 8601 timestamp of the last update
+          examples:
+          - '2024-01-01T00:00:00Z'
+          type: string
+      required:
+      - uid
+      - name
+      - cursor
+      - checkpointVersion
+      - updatedAt
+      type: object
+      x-tags:
+      - Event Checkpoints
+    ListCheckpointsResponse:
+      properties:
+        checkpoints:
+          items:
+            $ref: '#/components/schemas/CheckpointData'
+          type: array
+      required:
+      - checkpoints
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PatchCheckpointBody:
+      properties:
+        expected_checkpoint_version:
+          description: Optional checkpointVersion value from your last read of this checkpoint. If supplied and it no longer matches the current version, the request returns 409 Conflict.
+          examples:
+          - ec1....
+          type:
+          - string
+          - 'null'
+        new_cursor:
+          description: New cursor token (ev1.*) to advance the checkpoint to
+          examples:
+          - ev1....
+          type: string
+      required:
+      - new_cursor
+      type: object
+      x-tags:
+      - Event Checkpoints
+    DeleteCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointRef'
+        deleted:
+          description: Always True on success
+          type: boolean
+      required:
+      - checkpoint
+      - deleted
+      type: object
+      x-tags:
+      - Event Checkpoints
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

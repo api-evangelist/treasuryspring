@@ -1,0 +1,845 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Subscriptions API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: FTF Subscriptions
+  name: Subscriptions
+paths:
+  /subscribe:
+    post:
+      description: Subscribe to an FTF
+      operationId: post.subscribe
+      parameters:
+      - description: Idempotency Key used to ensure that the same request is not processed more than once. If the same request is received more than once, the second request will be ignored. **Each valid new request must have a different Idempotency Key** (*It is recommended to use a UUID as the Idempotency Key*)
+        example: 1063fdc18c7b44e193a01c4f3834907b
+        in: header
+        name: idempotency-key
+        required: true
+        schema:
+          description: Idempotency Key used to ensure that the same request is not processed more than once. If the same request is received more than once, the second request will be ignored. **Each valid new request must have a different Idempotency Key** (*It is recommended to use a UUID as the Idempotency Key*)
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+          description: Subscription details
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Subscribe to an FTF
+      tags:
+      - Subscriptions
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/subscribe' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -H 'Idempotency-Key: 89ca0f719d8d4506b76e89fb9bb03e83' \\\n    -d '{\n        \"entityCode\": \"TEST0001\",\n        \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n        \"amount\": 1000,\n        \"maturityAction\": \"ROLL\",\n        \"subscriptionDate\": \"2024-01-01\",\n        \"source\": \"As per Master Subscription Agreement\"\n    }'\n"
+  /subscription:
+    get:
+      description: Retrieves a list of all subscriptions that the user has permission to view.
+      operationId: get.subscriptions
+      parameters:
+      - description: Parameter to filter subscriptions by entity code
+        in: query
+        name: entity_code
+        required: false
+        schema:
+          description: Parameter to filter subscriptions by entity code
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter subscriptions by minimum subscription date
+        example: '2025-01-01'
+        in: query
+        name: min_subscription_date
+        required: false
+        schema:
+          description: Parameter to filter subscriptions by minimum subscription date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter subscriptions by maximum subscription date
+        example: '2025-02-01'
+        in: query
+        name: max_subscription_date
+        required: false
+        schema:
+          description: Parameter to filter subscriptions by maximum subscription date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter subscriptions by minimum maturity date
+        example: '2025-01-01'
+        in: query
+        name: min_maturity_date
+        required: false
+        schema:
+          description: Parameter to filter subscriptions by minimum maturity date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter subscriptions by maximum maturity date
+        example: '2025-02-01'
+        in: query
+        name: max_maturity_date
+        required: false
+        schema:
+          description: Parameter to filter subscriptions by maximum maturity date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Page size used for pagination
+        example: 100
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Page size used for pagination
+          type: integer
+      - description: Offset used for pagination
+        example: 0
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: Offset used for pagination
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSubscriptions'
+          description: List of subscriptions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a list of all subscriptions
+      tags:
+      - Subscriptions
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/subscription?entity_code=TEST0001&limit=10&offset=0' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /subscription/{entity_code}/{uid}:
+    get:
+      description: 'Retrieves a single subscription if the user has permission to view it. Useful for tracking a
+
+        subscription returned by `/subscribe` until its `holdingUid` is populated. Once `holdingUid`
+
+        exists, treat the holding as the live source of truth.'
+      operationId: get.subscription
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Subscription uid
+        example: 8a1f37f521f146dbaa4a333d0bc26158
+        in: path
+        name: uid
+        required: true
+        schema:
+          description: Subscription uid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+          description: Subscription information
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a single subscription by id
+      tags:
+      - Subscriptions
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/subscription/TEST0001/8a1f37f521f146dbaa4a333d0bc26158' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /validate:
+    post:
+      description: 'Validate a prospective subscription without committing to it.
+
+
+        Confirms the indication is still available to this entity on the chosen subscription date and that
+
+        the amount is within the indication''s permitted limits, returning the matching indication (including
+
+        its current pricing). Use this as a pre-flight check before calling `/subscribe`. A 4xx response
+
+        indicates the prospective subscription would be rejected.'
+      operationId: post.validate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Indication'
+          description: The matching indication if the prospective subscription is valid
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Validate a prospective subscription
+      tags:
+      - Subscriptions
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/validate' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"entityCode\": \"TEST0001\",\n        \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n        \"amount\": 1000,\n        \"maturityAction\": \"ROLL\",\n        \"subscriptionDate\": \"2024-01-01\",\n        \"source\": \"As per Master Subscription Agreement\"\n    }'\n"
+components:
+  schemas:
+    PageInfo:
+      description: PageInfo schema.
+      properties:
+        hasNextPage:
+          description: Boolean indicating if there is a next page of items available
+          examples:
+          - true
+          type:
+          - boolean
+          - 'null'
+        hasPreviousPage:
+          description: boolean indicating if there is a previous page
+          examples:
+          - false
+          type:
+          - boolean
+          - 'null'
+        limit:
+          description: Limit or page size set (used for pagination)
+          examples:
+          - 100
+          type:
+          - integer
+          - 'null'
+        offset:
+          description: Offset of items (used for pagination)
+          examples:
+          - 0
+          type:
+          - integer
+          - 'null'
+        totalCount:
+          description: Total number of items available
+          examples:
+          - 200
+          type:
+          - integer
+          - 'null'
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      - limit
+      - offset
+      - totalCount
+      type: object
+    SubscriptionMaturityActionEnum:
+      enum:
+      - Roll
+      - Hold
+      - Redeem
+      type: string
+      x-tags:
+      - Subscriptions
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    SubscriptionStatusEnum:
+      enum:
+      - PENDING
+      - ACCEPTED
+      - DECLINED
+      - CANCELLED
+      - EXPIRED
+      type: string
+      x-tags:
+      - Subscriptions
+    PaginatedSubscriptions:
+      description: PaginatedSubscriptions schema.
+      properties:
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        subscriptions:
+          items:
+            $ref: '#/components/schemas/Subscription'
+          type: array
+      required:
+      - pageInfo
+      - subscriptions
+      type: object
+      x-tags:
+      - Subscriptions
+    Indication:
+      description: Indication schema.
+      properties:
+        calendars:
+          description: List of calendars followed by product
+          examples:
+          - - TreasurySpring
+            - United Kingdom
+          items:
+            type: string
+          type: array
+        cellCode:
+          description: Cell Code
+          examples:
+          - Example-IC
+          type: string
+        created:
+          description: Indication creation date (timezone aware, London time).
+          examples:
+          - '2024-01-01T00:00:00'
+          format: date-time
+          type: string
+        currency:
+          description: FTF currency
+          examples:
+          - GBP
+          type: string
+        cutoffTime:
+          description: Time of day at which subscription cut-off occurs for this product, expressed as a naive wall-clock time in London local time (Europe/London). It is the same for every subscriptionDate. Because it carries no date, it has no UTC offset (a wall-clock time maps to a different UTC instant under GMT vs BST); to obtain the timezone-aware cut-off instant, combine it with the chosen subscriptionDate in the Europe/London timezone.
+          examples:
+          - '12:15:00'
+          format: time
+          type: string
+        enabled:
+          description: Controls if the indication is enabled or set to notify me
+          examples:
+          - true
+          type: boolean
+        enforceMaximum:
+          description: Enforce maximum investment amount (if not enforced any subscription above maximum is subject to review)
+          examples:
+          - true
+          type: boolean
+        enforceMinimum:
+          description: Enforce minimum investment amount (if not enforced any subscription below minimum is subject to review)
+          examples:
+          - true
+          type: boolean
+        expiry:
+          description: Indication deprecated after expiring, rates subject to change (timezone aware, London time).
+          examples:
+          - '2025-01-01T00:00:00'
+          format: date-time
+          type: string
+        extensionDays:
+          description: Extension frequency (in days) (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        finalDays:
+          description: Final period (in days) (extendables only)
+          examples:
+          - 45
+          type:
+          - integer
+          - 'null'
+        indicativeFinalYield:
+          description: Indicative final period yield, annualised APY (extendables only).
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        indicativeYield:
+          description: Indicative yield (annualised APY).
+          examples:
+          - 5.5
+          type: number
+        issueDate:
+          description: Issue date of the FTF
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        maturityDate:
+          description: Maturity date of the FTF
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        maximum:
+          description: Maximum Investment amount (in Millions)
+          examples:
+          - 100
+          type: number
+        minExtensions:
+          description: Minimum extensions to remove dropdown rate (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        minimum:
+          description: Minimum investment amount (in Millions)
+          examples:
+          - 10
+          type:
+          - number
+          - 'null'
+        nbPenaltyExtensions:
+          description: Minimum extensions to remove penalty spread (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        obligorExposureCode:
+          description: Obligor Exposure Code
+          examples:
+          - BACR
+          type: string
+        obligorExposureName:
+          description: Obligor Exposure Name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        optionDate:
+          description: Extension option date (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        productCode:
+          description: Product Code
+          examples:
+          - GBP-BACR[GC]-3M
+          type:
+          - string
+          - 'null'
+        restricted:
+          description: Controls if the indication is restricted for a particular entity
+          examples:
+          - false
+          type: boolean
+        sector:
+          description: Product Sector
+          examples:
+          - Financial
+          type:
+          - string
+          - 'null'
+        subscriptionDates:
+          description: List of subscription dates
+          examples:
+          - - '2024-01-01'
+          items:
+            format: date
+            type: string
+          type: array
+        term:
+          description: The product term
+          examples:
+          - 3m
+          type: string
+        type:
+          description: FTF type
+          examples:
+          - Fixed
+          type: string
+        uid:
+          description: Indication uid
+          examples:
+          - 8ca8f50d3ef44a43962998a5533f0cfa
+          type: string
+      required:
+      - uid
+      - type
+      - currency
+      - issueDate
+      - subscriptionDates
+      - cutoffTime
+      - maturityDate
+      - indicativeYield
+      - maximum
+      - cellCode
+      - obligorExposureCode
+      - obligorExposureName
+      - enabled
+      - term
+      - restricted
+      - calendars
+      - enforceMinimum
+      - enforceMaximum
+      type: object
+      x-tags:
+      - Indications
+    Subscription:
+      description: Subscription schema.
+      properties:
+        amount:
+          description: Subscription amount
+          examples:
+          - 1000
+          type: number
+        cellCode:
+          description: Cell code
+          examples:
+          - Example-IC
+          type: string
+        currency:
+          description: Subscription currency
+          examples:
+          - GBP
+          type: string
+        cutoffDatetime:
+          description: Cut-off datetime for this subscription (timezone aware). Last point at which the subscription's maturity action can be changed before TreasurySpring locks it in.
+          examples:
+          - '2024-01-01T12:15:00'
+          format: date-time
+          type: string
+        entityCode:
+          description: Subscribing Entity Code
+          examples:
+          - TEST0001
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type:
+          - string
+          - 'null'
+        indicationUid:
+          description: Indication uid
+          examples:
+          - ef8b318a15b04784ba86c8667727d78b
+          type:
+          - string
+          - 'null'
+        maturityAction:
+          description: Maturity action
+          examples:
+          - Roll
+          type: string
+        maturityDate:
+          description: Date the holding will mature
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        obligorExposureCode:
+          description: Obligor exposure code
+          examples:
+          - BACR[GC]
+          type: string
+        obligorExposureName:
+          description: Obligor exposure name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        productCode:
+          description: Product code
+          examples:
+          - GBP-BACR[GC]-3M
+          type: string
+        releaserEmail:
+          description: Releaser email
+          examples:
+          - example@treasuryspring.com
+          type:
+          - string
+          - 'null'
+        signerEmail:
+          description: Signer email
+          examples:
+          - example@treasuryspring.com
+          type:
+          - string
+          - 'null'
+        source:
+          description: Source of funds
+          examples:
+          - As per Master Subscription Agreement
+          type: string
+        status:
+          $ref: '#/components/schemas/SubscriptionStatusEnum'
+          description: Status of the subscription
+          examples:
+          - PENDING
+        subscriptionDate:
+          description: The date to subscribe to the indication
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        uid:
+          description: Subscription uid
+          examples:
+          - 8a1f37f521f146dbaa4a333d0bc26158
+          type: string
+        yield:
+          description: Yield agreed at subscribe time (annualised APY).
+          examples:
+          - 5
+          type:
+          - number
+          - 'null'
+      required:
+      - uid
+      - amount
+      - entityCode
+      - maturityAction
+      - source
+      - subscriptionDate
+      - cutoffDatetime
+      - status
+      - currency
+      - cellCode
+      - maturityDate
+      - obligorExposureCode
+      - obligorExposureName
+      - productCode
+      type: object
+      x-tags:
+      - Subscriptions
+    SubscriptionBody:
+      description: SubscriptionBody schema.
+      properties:
+        amount:
+          description: Subscription amount in the currency of the indication
+          examples:
+          - 1000
+          type: number
+        entityCode:
+          description: Subscribing entity code
+          examples:
+          - TEST0001
+          type: string
+        indicationUid:
+          description: Uid of the indication to subscribe to.
+          examples:
+          - 539e30e363b549bf80a0961fd0242809
+          type: string
+        maturityAction:
+          $ref: '#/components/schemas/SubscriptionMaturityActionEnum'
+          default: Roll
+          description: Maturity action type
+          examples:
+          - Roll
+        source:
+          default: As per Master Subscription Agreement
+          description: Source of funds
+          examples:
+          - As per Master Subscription Agreement
+          type: string
+        subscriptionDate:
+          description: The date to subscribe to the FTF. A list of possible dates can be found in the subscriptionDates field for the indication. If no date provided, this will default to today.
+          examples:
+          - '2024-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        withdrawal_date:
+          description: Date to withdraw, applicable only if maturity action is set to REDEEM
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+      required:
+      - entityCode
+      - indicationUid
+      - amount
+      type: object
+      x-tags:
+      - Subscriptions
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    ValidateBody:
+      description: 'Body for validating a prospective subscription before committing to it.
+
+
+        Mirrors the fields of a subscription request. The endpoint performs a full
+
+        validation: it confirms the indication is still available and that the amount
+
+        is within the indication''s permitted limits.'
+      properties:
+        amount:
+          description: Proposed subscription amount in the currency of the indication
+          examples:
+          - 1000
+          type: number
+        entityCode:
+          description: Subscribing entity code
+          examples:
+          - TEST0001
+          type: string
+        indicationUid:
+          description: Uid of the indication to validate against.
+          examples:
+          - 539e30e363b549bf80a0961fd0242809
+          type: string
+        maturityAction:
+          $ref: '#/components/schemas/SubscriptionMaturityActionEnum'
+          default: Roll
+          description: Maturity action type
+          examples:
+          - Roll
+        source:
+          default: As per Master Subscription Agreement
+          description: Source of funds
+          examples:
+          - As per Master Subscription Agreement
+          type: string
+        subscriptionDate:
+          description: The date to subscribe to the FTF. A list of possible dates can be found in the subscriptionDates field for the indication. If no date provided, this will default to today.
+          examples:
+          - '2024-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+      required:
+      - entityCode
+      - indicationUid
+      - amount
+      type: object
+      x-tags:
+      - Subscriptions
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

@@ -1,0 +1,385 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Indications API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Get information about Indications
+  name: Indications
+paths:
+  /indication/{code}:
+    get:
+      description: Retrieves a list of all Indications that the user has permission to view.
+      operationId: get.indications
+      parameters:
+      - description: Entity code
+        in: path
+        name: code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Indication'
+                type: array
+          description: List of indications
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a list of all indications
+      tags:
+      - Indications
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/indication/TEST0001' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /indication/{code}/{uid}:
+    get:
+      description: Retrieves a single Indication if the user has permission to view it.
+      operationId: get.indication
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Indication uid
+        example: 8ca8f50d3ef44a43962998a5533f0cfa
+        in: path
+        name: uid
+        required: true
+        schema:
+          description: Indication uid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Indication'
+          description: Indication information
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a single indication by id
+      tags:
+      - Indications
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/indication/TEST0001/8ca8f50d3ef44a43962998a5533f0cfa' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    Indication:
+      description: Indication schema.
+      properties:
+        calendars:
+          description: List of calendars followed by product
+          examples:
+          - - TreasurySpring
+            - United Kingdom
+          items:
+            type: string
+          type: array
+        cellCode:
+          description: Cell Code
+          examples:
+          - Example-IC
+          type: string
+        created:
+          description: Indication creation date (timezone aware, London time).
+          examples:
+          - '2024-01-01T00:00:00'
+          format: date-time
+          type: string
+        currency:
+          description: FTF currency
+          examples:
+          - GBP
+          type: string
+        cutoffTime:
+          description: Time of day at which subscription cut-off occurs for this product, expressed as a naive wall-clock time in London local time (Europe/London). It is the same for every subscriptionDate. Because it carries no date, it has no UTC offset (a wall-clock time maps to a different UTC instant under GMT vs BST); to obtain the timezone-aware cut-off instant, combine it with the chosen subscriptionDate in the Europe/London timezone.
+          examples:
+          - '12:15:00'
+          format: time
+          type: string
+        enabled:
+          description: Controls if the indication is enabled or set to notify me
+          examples:
+          - true
+          type: boolean
+        enforceMaximum:
+          description: Enforce maximum investment amount (if not enforced any subscription above maximum is subject to review)
+          examples:
+          - true
+          type: boolean
+        enforceMinimum:
+          description: Enforce minimum investment amount (if not enforced any subscription below minimum is subject to review)
+          examples:
+          - true
+          type: boolean
+        expiry:
+          description: Indication deprecated after expiring, rates subject to change (timezone aware, London time).
+          examples:
+          - '2025-01-01T00:00:00'
+          format: date-time
+          type: string
+        extensionDays:
+          description: Extension frequency (in days) (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        finalDays:
+          description: Final period (in days) (extendables only)
+          examples:
+          - 45
+          type:
+          - integer
+          - 'null'
+        indicativeFinalYield:
+          description: Indicative final period yield, annualised APY (extendables only).
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        indicativeYield:
+          description: Indicative yield (annualised APY).
+          examples:
+          - 5.5
+          type: number
+        issueDate:
+          description: Issue date of the FTF
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        maturityDate:
+          description: Maturity date of the FTF
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        maximum:
+          description: Maximum Investment amount (in Millions)
+          examples:
+          - 100
+          type: number
+        minExtensions:
+          description: Minimum extensions to remove dropdown rate (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        minimum:
+          description: Minimum investment amount (in Millions)
+          examples:
+          - 10
+          type:
+          - number
+          - 'null'
+        nbPenaltyExtensions:
+          description: Minimum extensions to remove penalty spread (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        obligorExposureCode:
+          description: Obligor Exposure Code
+          examples:
+          - BACR
+          type: string
+        obligorExposureName:
+          description: Obligor Exposure Name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        optionDate:
+          description: Extension option date (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        productCode:
+          description: Product Code
+          examples:
+          - GBP-BACR[GC]-3M
+          type:
+          - string
+          - 'null'
+        restricted:
+          description: Controls if the indication is restricted for a particular entity
+          examples:
+          - false
+          type: boolean
+        sector:
+          description: Product Sector
+          examples:
+          - Financial
+          type:
+          - string
+          - 'null'
+        subscriptionDates:
+          description: List of subscription dates
+          examples:
+          - - '2024-01-01'
+          items:
+            format: date
+            type: string
+          type: array
+        term:
+          description: The product term
+          examples:
+          - 3m
+          type: string
+        type:
+          description: FTF type
+          examples:
+          - Fixed
+          type: string
+        uid:
+          description: Indication uid
+          examples:
+          - 8ca8f50d3ef44a43962998a5533f0cfa
+          type: string
+      required:
+      - uid
+      - type
+      - currency
+      - issueDate
+      - subscriptionDates
+      - cutoffTime
+      - maturityDate
+      - indicativeYield
+      - maximum
+      - cellCode
+      - obligorExposureCode
+      - obligorExposureName
+      - enabled
+      - term
+      - restricted
+      - calendars
+      - enforceMinimum
+      - enforceMaximum
+      type: object
+      x-tags:
+      - Indications
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

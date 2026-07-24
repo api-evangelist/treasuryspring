@@ -1,0 +1,206 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Webhooks API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Integrate with webhooks to receive notifications
+  name: Webhooks
+paths:
+  /webhook:
+    delete:
+      description: Deregister an existing webhook for a user
+      operationId: delete.webhook
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteWebhookResponse'
+          description: Webhook details
+      security:
+      - bearerAuth: []
+      summary: Deregister an existing webhook for a user
+      tags:
+      - Webhooks
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X DELETE 'https://api.treasuryspring.com/api/v1/webhook' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+    post:
+      description: Register a url to a user for webhook notifications
+      operationId: post.webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookUrlBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponse'
+          description: Webhook details
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Register a url to a user for webhook notifications
+      tags:
+      - Webhooks
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/webhook' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"url\": \"https://example.com\"\n    }'\n"
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    WebhookUrlBody:
+      properties:
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type: string
+      required:
+      - url
+      type: object
+      x-tags:
+      - Webhooks
+    DeleteWebhookResponse:
+      properties:
+        email:
+          description: Users Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type:
+          - string
+          - 'null'
+      required:
+      - email
+      type: object
+      x-tags:
+      - Webhooks
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    WebhookResponse:
+      properties:
+        email:
+          description: Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type: string
+      required:
+      - email
+      - url
+      type: object
+      x-tags:
+      - Webhooks
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

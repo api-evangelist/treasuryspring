@@ -1,0 +1,1028 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Events API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Stream of normalised events for integration and reconciliation
+  name: Events
+paths:
+  /event:
+    get:
+      description: 'Return a page of events from the stream.
+
+
+        Supports cursor-based pagination with an optional timestamp lower bound.'
+      operationId: get.events
+      parameters:
+      - description: Return events after this cursor (exclusive)
+        in: query
+        name: start_cursor
+        required: false
+        schema:
+          description: Return events after this cursor (exclusive)
+          type:
+          - string
+          - 'null'
+      - description: Return events up to and including this cursor
+        in: query
+        name: end_cursor
+        required: false
+        schema:
+          description: Return events up to and including this cursor
+          type:
+          - string
+          - 'null'
+      - description: Return events created after this timestamp. ISO 8601 datetime in any timezone. When using a timezone offset, percent-encode the + as %2B (e.g. %2B01:00), or use the Z suffix for UTC.
+        examples:
+          no_timezone:
+            summary: No timezone (treated as UTC)
+            value: '2024-01-01T00:00:00'
+          utc_z:
+            summary: UTC (Z suffix)
+            value: '2024-01-01T00:00:00Z'
+          with_offset:
+            summary: Timezone offset (+ must be encoded as %2B in the URL)
+            value: '2024-01-01T01:00:00+01:00'
+        in: query
+        name: min_created_at
+        required: false
+        schema:
+          description: Return events created after this timestamp. ISO 8601 datetime in any timezone. When using a timezone offset, percent-encode the + as %2B (e.g. %2B01:00), or use the Z suffix for UTC.
+          format: date-time
+          type:
+          - string
+          - 'null'
+      - description: Max events to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 1000
+          description: Max events to return
+          maximum: 10000
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsResponse'
+          description: Event stream with pagination
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a list of events
+      tags:
+      - Events
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/event?limit=100&start_cursor=ev1.abc123.xyz789' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+components:
+  schemas:
+    EventsResponse:
+      description: Response for GET /event.
+      properties:
+        events:
+          items:
+            discriminator:
+              mapping:
+                ADJUSTED: '#/components/schemas/AdjustedEvent'
+                CANCELLED: '#/components/schemas/CancelledEvent'
+                CASH_MOVED: '#/components/schemas/CashMovedEvent'
+                CURRENCY_CONVERTED: '#/components/schemas/CurrencyConvertedEvent'
+                EXTENDED: '#/components/schemas/ExtendedEvent'
+                FINALIZED: '#/components/schemas/FinalizedEvent'
+                ISSUED: '#/components/schemas/IssuedEvent'
+                REDEEMED: '#/components/schemas/RedeemedEvent'
+                SPLIT: '#/components/schemas/SplitEvent'
+                SUBSCRIBED: '#/components/schemas/SubscribedEvent'
+              propertyName: eventType
+            oneOf:
+            - $ref: '#/components/schemas/SubscribedEvent'
+            - $ref: '#/components/schemas/IssuedEvent'
+            - $ref: '#/components/schemas/SplitEvent'
+            - $ref: '#/components/schemas/ExtendedEvent'
+            - $ref: '#/components/schemas/FinalizedEvent'
+            - $ref: '#/components/schemas/AdjustedEvent'
+            - $ref: '#/components/schemas/CurrencyConvertedEvent'
+            - $ref: '#/components/schemas/CashMovedEvent'
+            - $ref: '#/components/schemas/RedeemedEvent'
+            - $ref: '#/components/schemas/CancelledEvent'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/EventPageInfo'
+      required:
+      - events
+      - pageInfo
+      type: object
+      x-tags:
+      - Event Checkpoints
+    ExtendedEvent:
+      description: A holding's maturity date was extended.
+      properties:
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: EXTENDED
+          type: string
+        extensionOptionDate:
+          description: Updated extension option date (YYYY-MM-DD) after the change. Null if none applies.
+          examples:
+          - '2025-02-15'
+          type:
+          - string
+          - 'null'
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityDate:
+          description: Updated maturity date (YYYY-MM-DD) after the extension.
+          examples:
+          - '2025-06-01'
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        previousExtensionOptionDate:
+          description: Extension option date (YYYY-MM-DD) before the change. Null if none was previously set.
+          examples:
+          - '2024-11-15'
+          type:
+          - string
+          - 'null'
+        previousMaturityDate:
+          description: Maturity date (YYYY-MM-DD) before the extension.
+          examples:
+          - '2024-12-01'
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - maturityDate
+      - previousMaturityDate
+      type: object
+      x-tags:
+      - Events
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    CancelledEvent:
+      description: A previously issued holding was cancelled.
+      properties:
+        cost:
+          description: Principal amount that was invested in the cancelled holding.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: CANCELLED
+          type: string
+        holdingUid:
+          description: Unique identifier of the cancelled holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - eventType
+      - currency
+      - holdingUid
+      - cost
+      type: object
+      x-tags:
+      - Events
+    SplitEvent:
+      description: A holding was split into two separate holdings.
+      properties:
+        cost:
+          description: Remaining principal amount on the original holding after the split.
+          examples:
+          - '5000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: SPLIT
+          type: string
+        holdingUid:
+          description: Unique identifier of the original holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        splitCost:
+          description: Principal amount assigned to the new holding created by the split.
+          examples:
+          - '5000.00'
+          format: decimal
+          type: string
+        splitHoldingUid:
+          description: Unique identifier of the new holding created by the split.
+          examples:
+          - c660adab8e394383a3f839dd9d66bf9e
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - cost
+      - splitHoldingUid
+      - splitCost
+      type: object
+      x-tags:
+      - Events
+    IssuedEvent:
+      description: A holding was issued (moved from subscription to active).
+      properties:
+        cost:
+          description: Principal amount invested in the holding's currency.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: ISSUED
+          type: string
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        issueDate:
+          description: Date (YYYY-MM-DD) the holding was issued.
+          examples:
+          - '2024-01-01'
+          type: string
+        maturityDate:
+          description: Date (YYYY-MM-DD) the holding is scheduled to mature.
+          examples:
+          - '2025-01-01'
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        productCode:
+          description: Identifier of the product this holding is in.
+          examples:
+          - GBP-BACR[GC]-3M
+          type: string
+        subscriptionUid:
+          description: Unique identifier of the subscription.
+          examples:
+          - dade0389c66241bd8366b017f1ffe19a
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - subscriptionUid
+      - productCode
+      - cost
+      - issueDate
+      - maturityDate
+      type: object
+      x-tags:
+      - Events
+    EventPageInfo:
+      description: Pagination metadata for cursor-based event queries.
+      properties:
+        endCursor:
+          description: Stable fence cursor representing the head of the stream at the time of the request. Use this as end_cursor on subsequent requests to retrieve only new events.
+          examples:
+          - ev1.abc123.xyz789
+          type:
+          - string
+          - 'null'
+        hasNextPage:
+          description: True if there are more events beyond the current page.
+          examples:
+          - false
+          type: boolean
+        limit:
+          description: Maximum number of events returned per request.
+          examples:
+          - 1000
+          type: integer
+        pageEndCursor:
+          description: Cursor of the last event on the current page. Pass as start_cursor to fetch the next page.
+          examples:
+          - ev1.abc123.xyz789
+          type:
+          - string
+          - 'null'
+        startCursor:
+          description: Cursor of the first event on the current page.
+          examples:
+          - ev1.abc123.xyz789
+          type:
+          - string
+          - 'null'
+        totalCount:
+          description: Total number of events matching the current filters and cursor range.
+          examples:
+          - 42
+          type:
+          - integer
+          - 'null'
+      required:
+      - hasNextPage
+      - limit
+      type: object
+      x-tags:
+      - Event Checkpoints
+    RedeemedEvent:
+      description: A holding was redeemed at maturity and proceeds were returned to the client.
+      properties:
+        cost:
+          description: Principal amount that was invested.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: REDEEMED
+          type: string
+        fxCurrency:
+          description: Currency in which the redemption proceeds were paid out, when this differs from the holding's currency (FX redemption). Null for standard same-currency redemptions.
+          examples:
+          - USD
+          type:
+          - string
+          - 'null'
+        fxValue:
+          description: Amount paid out in fxCurrency. Null for standard same-currency redemptions.
+          examples:
+          - '12500.00'
+          format: decimal
+          type:
+          - string
+          - 'null'
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - cost
+      type: object
+      x-tags:
+      - Events
+    CurrencyConvertedEvent:
+      description: Cash was converted from one currency to another.
+      properties:
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: CURRENCY_CONVERTED
+          type: string
+        fromAmount:
+          description: Amount in the source currency before conversion.
+          examples:
+          - '12500.00'
+          format: decimal
+          type: string
+        fromCurrency:
+          description: Source currency code.
+          examples:
+          - USD
+          type: string
+        fxRate:
+          description: Exchange rate applied in the conversion.
+          examples:
+          - '0.800000'
+          format: decimal
+          type: string
+        toAmount:
+          description: Amount in the target currency after conversion.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        toCurrency:
+          description: Target currency code.
+          examples:
+          - GBP
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - eventType
+      - fromCurrency
+      - toCurrency
+      - fromAmount
+      - toAmount
+      - fxRate
+      type: object
+      x-tags:
+      - Events
+    FinalizedEvent:
+      description: A holding was confirmed as closed at maturity.
+      properties:
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: FINALIZED
+          type: string
+        finalized:
+          description: Always true — confirms the holding is closed at maturity.
+          examples:
+          - true
+          type: boolean
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityDate:
+          description: Date (YYYY-MM-DD) the holding matured.
+          examples:
+          - '2025-01-01'
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - maturityDate
+      - finalized
+      type: object
+      x-tags:
+      - Events
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    AdjustedEvent:
+      description: One or more holding attributes were amended.
+      properties:
+        cost:
+          description: Updated principal amount in the holding's currency.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: ADJUSTED
+          type: string
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityDate:
+          description: Updated maturity date (YYYY-MM-DD).
+          examples:
+          - '2025-01-01'
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        previousMaturityDate:
+          description: Maturity date (YYYY-MM-DD) before the amendment.
+          examples:
+          - '2024-12-01'
+          type: string
+        previousMaturityValue:
+          description: Expected maturity value before the amendment.
+          examples:
+          - '10200.00'
+          format: decimal
+          type: string
+        previousSubscriptionDate:
+          description: Subscription date (YYYY-MM-DD) before the amendment.
+          examples:
+          - '2023-12-01'
+          type: string
+        subscriptionDate:
+          description: Updated subscription date (YYYY-MM-DD).
+          examples:
+          - '2024-01-01'
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - cost
+      - subscriptionDate
+      - maturityDate
+      - previousMaturityDate
+      - previousMaturityValue
+      - previousSubscriptionDate
+      type: object
+      x-tags:
+      - Events
+    SubscribedEvent:
+      description: A new holding subscription was placed.
+      properties:
+        cost:
+          description: Principal amount invested in the holding's currency.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the holding.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: SUBSCRIBED
+          type: string
+        holdingUid:
+          description: Unique identifier of the holding.
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type: string
+        maturityDate:
+          description: Date (YYYY-MM-DD) the holding is scheduled to mature.
+          examples:
+          - '2025-01-01'
+          type: string
+        maturityValue:
+          description: Expected or actual maturity value (principal plus interest) in the holding's currency.
+          examples:
+          - '10250.00'
+          format: decimal
+          type: string
+        obligorExposureCode:
+          description: Code identifying the obligor exposure (counterparty) for this holding.
+          examples:
+          - BACR
+          type: string
+        productCode:
+          description: Identifier of the product this holding is in.
+          examples:
+          - GBP-BACR[GC]-3M
+          type: string
+        subscriptionDate:
+          description: Date (YYYY-MM-DD) the subscription was originally placed.
+          examples:
+          - '2024-01-01'
+          type: string
+        subscriptionUid:
+          description: Unique identifier of the subscription.
+          examples:
+          - dade0389c66241bd8366b017f1ffe19a
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+        yield:
+          description: Current yield for the holding at the time of the event (annualised APY).
+          examples:
+          - '4.000000'
+          format: decimal
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - obligorExposureCode
+      - maturityValue
+      - yield
+      - eventType
+      - currency
+      - holdingUid
+      - subscriptionUid
+      - productCode
+      - cost
+      - subscriptionDate
+      - maturityDate
+      type: object
+      x-tags:
+      - Events
+    CashMovedEvent:
+      description: Cash was deposited into or withdrawn from the client's account.
+      properties:
+        amount:
+          description: Net cash amount. Positive indicates a deposit; negative indicates a withdrawal.
+          examples:
+          - '10000.00'
+          format: decimal
+          type: string
+        currency:
+          description: Three-letter currency code for the cash movement.
+          examples:
+          - GBP
+          type: string
+        cursor:
+          description: Opaque pagination token for this event. Pass as start_cursor on the next request to retrieve events that occurred after this one.
+          examples:
+          - ev1.abc123.xyz789
+          type: string
+        entityCode:
+          description: Code identifying the organisation (client) this event belongs to.
+          examples:
+          - TEST001
+          type: string
+        eventType:
+          const: CASH_MOVED
+          type: string
+        uid:
+          description: Unique identifier for this event record.
+          examples:
+          - '00000000000000000000000000000001'
+          type: string
+      required:
+      - uid
+      - cursor
+      - entityCode
+      - eventType
+      - currency
+      - amount
+      type: object
+      x-tags:
+      - Events
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

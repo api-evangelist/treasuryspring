@@ -1,0 +1,345 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Entities API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Get information about Entities
+  name: Entities
+paths:
+  /entity:
+    get:
+      description: Retrieves a list of all entities that the user has permission to view.
+      operationId: get.entities
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Entity'
+                type: array
+          description: List of entities
+      security:
+      - bearerAuth: []
+      summary: Get a list of all entities
+      tags:
+      - Entities
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/entity' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /entity/{code}:
+    get:
+      description: Retrieves data for a single Entity if the user has permission to view it.
+      operationId: get.entity
+      parameters:
+      - description: Entity code
+        in: path
+        name: code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: Entity information
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a single entity by entity code
+      tags:
+      - Entities
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/entity/TEST0001' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /entity/{code}/permissions:
+    get:
+      description: Retrieves a list of all users who have access to an entity and the permissions they have.
+      operationId: get.entity_user_permissions
+      parameters:
+      - description: Entity code
+        in: path
+        name: code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/EntityUser'
+                type: array
+          description: List of users and associated permissions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: List all users and permissions for an entity
+      tags:
+      - Entities
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/entity/TEST0001/permissions' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+components:
+  schemas:
+    EntityAccountManager:
+      description: EntityAccountManager schema.
+      properties:
+        email:
+          description: Account Manager Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+        name:
+          description: Account Manager Name
+          examples:
+          - example
+          type: string
+        phone:
+          description: Account phone number
+          type:
+          - string
+          - 'null'
+      required:
+      - email
+      - name
+      type: object
+      x-tags:
+      - Entities
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    EntityUser:
+      description: EntityUser schema.
+      properties:
+        permissions:
+          description: List of permissions assigned to the user
+          examples:
+          - - view:holdings
+            - view:profile
+          items:
+            type: string
+          type: array
+        status:
+          $ref: '#/components/schemas/EntityUserStatus'
+          description: User status
+          examples:
+          - Active
+        user:
+          description: User Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+      required:
+      - user
+      - permissions
+      - status
+      type: object
+      x-tags:
+      - Entities
+    Entity:
+      description: Entity schema.
+      properties:
+        accountManager:
+          anyOf:
+          - $ref: '#/components/schemas/EntityAccountManager'
+          - type: 'null'
+          description: Entity Account Manager
+        address:
+          description: Entity Address
+          type:
+          - string
+          - 'null'
+        bankAccounts:
+          description: List of bank accounts for the entity
+          items:
+            $ref: '#/components/schemas/EntityBankAccount'
+          type: array
+        code:
+          description: Entity Code
+          examples:
+          - TEST0001
+          type: string
+        countryCode:
+          description: Country code
+          examples:
+          - GB
+          type:
+          - string
+          - 'null'
+        currency:
+          description: Default Currency
+          examples:
+          - GBP
+          type: string
+        name:
+          description: Entity Name
+          examples:
+          - TreasurySpring Limited
+          type: string
+        onboarding:
+          description: True if entity is in the process of onboarding
+          type: boolean
+        status:
+          description: Entity Status
+          examples:
+          - ACTIVE
+          - PENDING
+          type: string
+        type:
+          description: Description of the Entity Type
+          type: string
+      required:
+      - code
+      - name
+      - status
+      - type
+      - onboarding
+      - currency
+      - bankAccounts
+      type: object
+      x-tags:
+      - Entities
+    EntityUserStatus:
+      enum:
+      - Pending
+      - Active
+      type: string
+      x-tags:
+      - Entities
+    EntityBankAccount:
+      description: EntityBankAccount schema.
+      properties:
+        currency:
+          description: Bank Account currency
+          examples:
+          - GBP
+          type: string
+        lastDigits:
+          description: last 4 digits of the account number
+          examples:
+          - '1234'
+          type: string
+        uid:
+          description: Bank Account uid
+          examples:
+          - 3e3020d02361470fa5839b2a456102b7
+          type: string
+      required:
+      - uid
+      - currency
+      - lastDigits
+      type: object
+      x-tags:
+      - Entities
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

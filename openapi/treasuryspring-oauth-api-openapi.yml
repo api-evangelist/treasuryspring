@@ -1,0 +1,200 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar OAuth API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: OAuth 2.0 endpoint to exchange your Client Credentials for a token. This token can then be used to access the API.
+  name: OAuth
+paths:
+  /oauth/token:
+    servers:
+    - description: Production OAuth
+      url: https://api.treasuryspring.com
+    - description: Sandbox OAuth
+      url: https://api.sandbox.treasuryspring.com
+    post:
+      description: 'Exchange OAuth credentials for a bearer access token. This single endpoint serves all three
+
+        supported grant types, selected by the `grant_type` form field. The client authenticates with
+
+        HTTP Basic auth (`client_id:client_secret`, base64-encoded) in the `Authorization` header.
+
+
+        | `grant_type` | Flow | Required fields (besides `grant_type` and `client_id`) |
+
+        |---|---|---|
+
+        | `client_credentials` | Client Credentials | `client_secret` |
+
+        | `authorization_code` | Code Authorisation | `code`, plus `redirect_uri` if multiple are registered |
+
+        | `refresh_token` | Code Authorisation | `refresh_token` |
+
+
+        The `authorization_code` and `refresh_token` grants belong to the Code Authorisation flow, whose
+
+        consent redirect happens in the browser before this exchange. See the
+
+        [Code Authorisation guide](/docs/guide/code-authorisation) for the full flow and redirect URI rules.'
+      operationId: post.token
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                client_id:
+                  description: The client id.
+                  example: 0fd5a813dca24bd09fdd04b8a5f3fc98
+                  type: string
+                client_secret:
+                  description: The client secret for client credentials flow.
+                  example: 6bcbe24146864fddbff048173006d9f9
+                  type: string
+                grant_type:
+                  description: The type of grant being requested.
+                  example: client_credentials
+                  type: string
+                redirect_uri:
+                  description: The redirect URI used in the authorization request. Required for the authorization_code grant when the client has more than one registered redirect URI.
+                  example: https://example.com/oauth/callback
+                  type: string
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: OAuth access token
+      security:
+      - basicAuth: []
+      summary: Get OAuth Access Token
+      tags:
+      - OAuth
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: 'curl --location ''https://api.treasuryspring.com/oauth/token'' \
+
+          --header ''Authorization: Basic MTM4Zjc3ZmY5MTc5NGQ0ZTg5MDYxYWJkNGE2ZDk1NDY6TlRobE9Ea3lNMlF0TjJFd05TMDBPRFJsTFdFek9EWXRPRFF5WldVOVpqQXlPV005'' \
+
+          --header ''Content-Type: application/x-www-form-urlencoded'' \
+
+          --data-urlencode ''grant_type=client_credentials'' \
+
+          --data-urlencode ''client_id=138f77ff91794d4e89061abd4a6d9546'' \
+
+          --data-urlencode ''client_secret=NThlODkyM2QtN2EwNS00ODRlLWEzODYtODQyZWU9ZjAyOWM9''
+
+          '
+      - label: Python
+        lang: Python
+        source: "\nimport requests\nfrom requests.auth import HTTPBasicAuth\n\n\nCLIENT_ID = \"0fd5a813dca24bd09fdd04b8a5f3fc98\"\nCLIENT_SECRET = \"6bcbe24146864fddbff048173006d9f9\"\nENVIRONMENT_URL = \"https://api.treasuryspring.com\"\n\ndef get_token():\n    client_credentials_endpoint = f\"{ENVIRONMENT_URL}/oauth/token\"\n    basic = HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)\n    headers = {\n        \"Content-Type\": \"application/x-www-form-urlencoded\",\n    }\n\n    body = {\n        \"grant_type\": \"client_credentials\",\n        \"client_id\": CLIENT_ID,\n        \"client_secret\": CLIENT_SECRET,\n    }\n    response = requests.post(\n        client_credentials_endpoint, headers=headers, data=body, auth=basic\n    )\n    res_json = response.json()\n    token = res_json[\"access_token\"]\n    return token\n\nif __name__ == \"__main__\":\n    token = get_token()\n"
+components:
+  schemas:
+    TokenResponse:
+      description: Response model to validate and return for oauth post notification requests.
+      properties:
+        access_token:
+          description: access token - can then be used directly to access protected endpoints
+          examples:
+          - 19fececa27edf4638a1c0024ee2ea7136
+          type: string
+        expires_in:
+          description: token expiry in seconds
+          examples:
+          - 3600
+          type: integer
+        refresh_token:
+          type:
+          - string
+          - 'null'
+        token_type:
+          description: token type, currently always bearer
+          examples:
+          - bearer
+          type: string
+      required:
+      - access_token
+      - expires_in
+      - token_type
+      type: object
+      x-tags:
+      - OAuth
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP

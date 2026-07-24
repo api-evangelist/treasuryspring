@@ -1,0 +1,1163 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: api-support@treasuryspring.com
+    name: API Support
+    url: https://treasuryspring.com/
+  description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
+  summary: '**REST API for integration with TreasurySpring**'
+  title: TreasurySpring Public Calendar Holdings API
+  version: v0.7.3
+  x-logo:
+    altText: TreasurySpring logo
+    url: /assets/TS_Logo.png
+servers:
+- description: Production Server
+  url: https://api.treasuryspring.com/api/v1
+- description: Sandbox Server
+  url: https://api.sandbox.treasuryspring.com/api/v1
+tags:
+- description: Get information about holdings. For how subscriptions become holdings and how holdings move through their lifecycle, see the FTF Lifecycle section.
+  name: Holdings
+paths:
+  /holding:
+    get:
+      description: Retrieves a list of all holdings that the user has permission to view.
+      operationId: get.holdings
+      parameters:
+      - description: Parameter to filter holdings by entity code
+        in: query
+        name: entity_code
+        required: false
+        schema:
+          description: Parameter to filter holdings by entity code
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter holdings by minimum subscription date
+        example: '2025-01-01'
+        in: query
+        name: min_subscription_date
+        required: false
+        schema:
+          description: Parameter to filter holdings by minimum subscription date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter holdings by maximum subscription date
+        example: '2025-02-01'
+        in: query
+        name: max_subscription_date
+        required: false
+        schema:
+          description: Parameter to filter holdings by maximum subscription date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter holdings by minimum maturity date
+        example: '2025-01-01'
+        in: query
+        name: min_maturity_date
+        required: false
+        schema:
+          description: Parameter to filter holdings by minimum maturity date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter holdings by maximum maturity date
+        example: '2025-02-01'
+        in: query
+        name: max_maturity_date
+        required: false
+        schema:
+          description: Parameter to filter holdings by maximum maturity date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Parameter to filter holdings by modification date
+        example: '2025-01-01'
+        in: query
+        name: min_modified_date
+        required: false
+        schema:
+          description: Parameter to filter holdings by modification date
+          format: date
+          type:
+          - string
+          - 'null'
+      - description: Page size used for pagination
+        example: 100
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Page size used for pagination
+          type: integer
+      - description: Offset used for pagination
+        example: 0
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: Offset used for pagination
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHoldings'
+          description: List of holdings
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a list of all holdings
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "curl -X GET 'https://api.treasuryspring.com/api/v1/holding?entity_code=TEST0001&min_maturity_date=2025-01-01&min_modified_date=2025-01-01&limit=10&offset=0' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /holding/{entity_code}/{holding_uid}:
+    get:
+      description: Retrieves data for a single holding if the user has permission to view it.
+      operationId: get.holding
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Holding uid
+        example: 0cf3256ab8744fe293a5011cbebda7f1
+        in: path
+        name: holding_uid
+        required: true
+        schema:
+          description: Holding uid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleHolding'
+          description: Holding information
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a single holding by id
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/holding/TEST0001/9r8e6g4ab8744fe24f8r511cbebda7f1' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /holding/{entity_code}/{holding_uid}/extension:
+    get:
+      description: 'Retrieves the extension history of an extendable holding, most recent first. Each extension records the
+
+        yield, price per share, and new maturity date applied at that extension. Fixed holdings have no extensions.'
+      operationId: get.holding_extensions
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Holding uid
+        example: 0cf3256ab8744fe293a5011cbebda7f1
+        in: path
+        name: holding_uid
+        required: true
+        schema:
+          description: Holding uid
+          type: string
+      - description: Page size used for pagination
+        example: 100
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Page size used for pagination
+          type: integer
+      - description: Offset used for pagination
+        example: 0
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: Offset used for pagination
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExtensions'
+          description: Paginated list of extensions for the holding
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get the extension history for a holding
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/holding/TEST0001/0cf3256ab8744fe293a5011cbebda7f1/extension' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /holding/{entity_code}/{holding_uid}/indication:
+    get:
+      description: 'Retrieves the indications available against a holding — for example, the FTFs a holding can roll
+
+        or switch into at maturity. Use these `uid`s when setting the holding''s maturity action.'
+      operationId: get.holding_indications
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Holding uid
+        example: 0cf3256ab8744fe293a5011cbebda7f1
+        in: path
+        name: holding_uid
+        required: true
+        schema:
+          description: Holding uid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Indication'
+                type: array
+          description: List of indications available against the holding
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get the indications available for a holding
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/holding/TEST0001/0cf3256ab8744fe293a5011cbebda7f1/indication' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+  /holding/{entity_code}/{holding_uid}/maturity-action:
+    get:
+      description: Get a list of maturity actions for a single holding
+      operationId: get.maturity_actions
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: Holding uid
+        example: 0cf3256ab8744fe293a5011cbebda7f1
+        in: path
+        name: holding_uid
+        required: true
+        schema:
+          description: Holding uid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MaturityAction'
+                type: array
+          description: Maturity actions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Get a list of maturity actions for a specific holding
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/holding/TEST0001/9r8e6g4ab8744fe24f8r511cbebda7f1/maturity-action' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
+    put:
+      description: 'Updates the maturity action for an existing holding. This operation applies to the entire holding amount and
+
+        will overwrite any next actions that have been set. For more granular control over next actions, use the
+
+        TreasurySpring portal.'
+      operationId: put.maturity_action
+      parameters:
+      - description: Entity code
+        example: TEST0001
+        in: path
+        name: entity_code
+        required: true
+        schema:
+          description: Entity code
+          type: string
+      - description: uid of the holding whose maturity action is being modified.
+        example: 0cf3256ab8744fe293a5011cbebda7f1
+        in: path
+        name: holding_uid
+        required: true
+        schema:
+          description: uid of the holding whose maturity action is being modified.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMaturityActionBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateMaturityActionResponse'
+          description: Maturity actions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - bearerAuth: []
+      summary: Update the maturity action for a holding
+      tags:
+      - Holdings
+      x-codeSamples:
+      - label: Curl
+        lang: Curl
+        source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/holding/TEST0001/9r8e6g4ab8744fe24f8r511cbebda7f1/maturity-action' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"reason\": \"Funds returning shortly\",\n        \"action\": \"HOLD\"\n    }'\n"
+components:
+  schemas:
+    PageInfo:
+      description: PageInfo schema.
+      properties:
+        hasNextPage:
+          description: Boolean indicating if there is a next page of items available
+          examples:
+          - true
+          type:
+          - boolean
+          - 'null'
+        hasPreviousPage:
+          description: boolean indicating if there is a previous page
+          examples:
+          - false
+          type:
+          - boolean
+          - 'null'
+        limit:
+          description: Limit or page size set (used for pagination)
+          examples:
+          - 100
+          type:
+          - integer
+          - 'null'
+        offset:
+          description: Offset of items (used for pagination)
+          examples:
+          - 0
+          type:
+          - integer
+          - 'null'
+        totalCount:
+          description: Total number of items available
+          examples:
+          - 200
+          type:
+          - integer
+          - 'null'
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      - limit
+      - offset
+      - totalCount
+      type: object
+    HoldingStatusEnum:
+      enum:
+      - Cash
+      - Pending
+      - PendingWithdrawal
+      - Issued
+      - Redeemed
+      - Cancelled
+      - CutOff
+      - Processing
+      type: string
+      x-tags:
+      - Holdings
+    UpdateMaturityActionBody:
+      description: UpdateMaturityActionBody schema.
+      properties:
+        action:
+          $ref: '#/components/schemas/MaturityActionEnum'
+          description: The maturity action to change to
+          examples:
+          - ROLL
+        indicationUid:
+          description: The uid of indication to switch to (Required if action is set to SWITCH)
+          examples:
+          - f952ed5df4g84f8gh148f4f8sf6g4
+          type:
+          - string
+          - 'null'
+        reason:
+          anyOf:
+          - $ref: '#/components/schemas/ReasonEnum'
+          - type: 'null'
+          description: Reason for redemption if choosing to redeem cash
+          examples:
+          - Need proceeds
+      required:
+      - action
+      type: object
+      x-tags:
+      - Holdings
+    ReasonEnum:
+      enum:
+      - Funds returning shortly
+      - Better terms elsewhere
+      - Receipt of interest payment
+      - Switching FTF product
+      - Treasury Operations changed
+      - Need proceeds
+      type: string
+      x-tags:
+      - Tasks
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    PaginatedExtensions:
+      description: PaginatedExtensions schema.
+      properties:
+        extensions:
+          items:
+            $ref: '#/components/schemas/Extension'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+      required:
+      - pageInfo
+      - extensions
+      type: object
+      x-tags:
+      - Holdings
+    SingleHolding:
+      description: Single Holding schema.
+      properties:
+        holding:
+          $ref: '#/components/schemas/Holding'
+        valueDate:
+          description: Date of the response (London timezone)
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+      required:
+      - holding
+      - valueDate
+      type: object
+      x-tags:
+      - Holdings
+    MaturityAction:
+      description: MaturityAction schema.
+      properties:
+        amount:
+          description: Amount
+          examples:
+          - 5000
+          type: number
+        currency:
+          description: Currency
+          examples:
+          - GBP
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 74628ebad0f54881b3c76acf146eb3c3
+          type: string
+        subscriptionUid:
+          description: The unique identifier for the subscription associated with the maturity action, if any.
+          examples:
+          - dade0389c66241bd8366b017f1ffe19a
+          type:
+          - string
+          - 'null'
+        type:
+          description: Maturity Action type
+          examples:
+          - ROLL
+          type: string
+        uid:
+          description: Maturity Action uid
+          examples:
+          - 96cd54e5ddfd41b0a77afef15a96660d
+          type: string
+      required:
+      - uid
+      - type
+      - amount
+      - currency
+      - holdingUid
+      type: object
+      x-tags:
+      - Holdings
+    Indication:
+      description: Indication schema.
+      properties:
+        calendars:
+          description: List of calendars followed by product
+          examples:
+          - - TreasurySpring
+            - United Kingdom
+          items:
+            type: string
+          type: array
+        cellCode:
+          description: Cell Code
+          examples:
+          - Example-IC
+          type: string
+        created:
+          description: Indication creation date (timezone aware, London time).
+          examples:
+          - '2024-01-01T00:00:00'
+          format: date-time
+          type: string
+        currency:
+          description: FTF currency
+          examples:
+          - GBP
+          type: string
+        cutoffTime:
+          description: Time of day at which subscription cut-off occurs for this product, expressed as a naive wall-clock time in London local time (Europe/London). It is the same for every subscriptionDate. Because it carries no date, it has no UTC offset (a wall-clock time maps to a different UTC instant under GMT vs BST); to obtain the timezone-aware cut-off instant, combine it with the chosen subscriptionDate in the Europe/London timezone.
+          examples:
+          - '12:15:00'
+          format: time
+          type: string
+        enabled:
+          description: Controls if the indication is enabled or set to notify me
+          examples:
+          - true
+          type: boolean
+        enforceMaximum:
+          description: Enforce maximum investment amount (if not enforced any subscription above maximum is subject to review)
+          examples:
+          - true
+          type: boolean
+        enforceMinimum:
+          description: Enforce minimum investment amount (if not enforced any subscription below minimum is subject to review)
+          examples:
+          - true
+          type: boolean
+        expiry:
+          description: Indication deprecated after expiring, rates subject to change (timezone aware, London time).
+          examples:
+          - '2025-01-01T00:00:00'
+          format: date-time
+          type: string
+        extensionDays:
+          description: Extension frequency (in days) (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        finalDays:
+          description: Final period (in days) (extendables only)
+          examples:
+          - 45
+          type:
+          - integer
+          - 'null'
+        indicativeFinalYield:
+          description: Indicative final period yield, annualised APY (extendables only).
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        indicativeYield:
+          description: Indicative yield (annualised APY).
+          examples:
+          - 5.5
+          type: number
+        issueDate:
+          description: Issue date of the FTF
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        maturityDate:
+          description: Maturity date of the FTF
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        maximum:
+          description: Maximum Investment amount (in Millions)
+          examples:
+          - 100
+          type: number
+        minExtensions:
+          description: Minimum extensions to remove dropdown rate (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        minimum:
+          description: Minimum investment amount (in Millions)
+          examples:
+          - 10
+          type:
+          - number
+          - 'null'
+        nbPenaltyExtensions:
+          description: Minimum extensions to remove penalty spread (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        obligorExposureCode:
+          description: Obligor Exposure Code
+          examples:
+          - BACR
+          type: string
+        obligorExposureName:
+          description: Obligor Exposure Name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        optionDate:
+          description: Extension option date (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        productCode:
+          description: Product Code
+          examples:
+          - GBP-BACR[GC]-3M
+          type:
+          - string
+          - 'null'
+        restricted:
+          description: Controls if the indication is restricted for a particular entity
+          examples:
+          - false
+          type: boolean
+        sector:
+          description: Product Sector
+          examples:
+          - Financial
+          type:
+          - string
+          - 'null'
+        subscriptionDates:
+          description: List of subscription dates
+          examples:
+          - - '2024-01-01'
+          items:
+            format: date
+            type: string
+          type: array
+        term:
+          description: The product term
+          examples:
+          - 3m
+          type: string
+        type:
+          description: FTF type
+          examples:
+          - Fixed
+          type: string
+        uid:
+          description: Indication uid
+          examples:
+          - 8ca8f50d3ef44a43962998a5533f0cfa
+          type: string
+      required:
+      - uid
+      - type
+      - currency
+      - issueDate
+      - subscriptionDates
+      - cutoffTime
+      - maturityDate
+      - indicativeYield
+      - maximum
+      - cellCode
+      - obligorExposureCode
+      - obligorExposureName
+      - enabled
+      - term
+      - restricted
+      - calendars
+      - enforceMinimum
+      - enforceMaximum
+      type: object
+      x-tags:
+      - Indications
+    Extension:
+      description: Extension schema — one historical extension of an extendable holding.
+      properties:
+        date:
+          description: Date the extension took effect
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        finalYield:
+          description: Final period yield, annualised APY (set on the final extension only).
+          examples:
+          - 5
+          type:
+          - number
+          - 'null'
+        maturity:
+          description: Maturity date set by this extension
+          examples:
+          - '2024-02-01'
+          format: date
+          type: string
+        pricePerShare:
+          description: Price per share at the extension
+          examples:
+          - 1.05
+          type: number
+        uid:
+          description: Extension uid
+          examples:
+          - bcee2bb8569d406c9251dcc9bee38aff
+          type: string
+        yield:
+          description: Yield for this extension period (annualised APY).
+          examples:
+          - 5
+          type: number
+      required:
+      - uid
+      - date
+      - maturity
+      - yield
+      - pricePerShare
+      type: object
+      x-tags:
+      - Holdings
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    MaturityActionEnum:
+      enum:
+      - ROLL
+      - SWITCH
+      - HOLD
+      - REDEEM
+      type: string
+      x-tags:
+      - Holdings
+    UpdateMaturityActionResponse:
+      description: UpdateMaturityActionResponse schema.
+      properties:
+        entityCode:
+          description: Entity Code
+          examples:
+          - TEST0001
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 16cdb3fe25e743fc9eed4b9742869424
+          type: string
+        maturityActions:
+          description: List of maturity actions
+          items:
+            $ref: '#/components/schemas/MaturityAction'
+          type: array
+      required:
+      - entityCode
+      - holdingUid
+      - maturityActions
+      type: object
+      x-tags:
+      - Holdings
+    Holding:
+      description: Holding schema.
+      properties:
+        calendars:
+          description: List of calendars followed by product
+          examples:
+          - - TreasurySpring
+            - United Kingdom
+          items:
+            type: string
+          type: array
+        cellCode:
+          description: Cell Code
+          examples:
+          - Example-IC
+          type: string
+        cost:
+          description: Holding initial cost
+          examples:
+          - 5000
+          type: number
+        currency:
+          description: Holding currency
+          examples:
+          - GBP
+          type:
+          - string
+          - 'null'
+        cutoffDatetime:
+          description: Cutoff date with timezone information
+          examples:
+          - '2024-04-15T12:15:00'
+          format: date-time
+          type:
+          - string
+          - 'null'
+        entityCode:
+          description: Investing Entity Code
+          examples:
+          - TEST0001
+          type: string
+        extendedMaturityDate:
+          description: New maturity date for an extension (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        extensionOptionDate:
+          description: Extension option date (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        extensionStartDate:
+          description: Start date for an extension (extendables only)
+          examples:
+          - '2025-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+        extensionStartValue:
+          description: Initial value for current extension (extendables only)
+          examples:
+          - 5000
+          type:
+          - number
+          - 'null'
+        finalYield:
+          description: Final period yield, annualised APY (extendables only).
+          examples:
+          - 0
+          type:
+          - number
+          - 'null'
+        finalized:
+          description: True if this is the final extension (extendables only)
+          examples:
+          - true
+          type:
+          - boolean
+          - 'null'
+        isOnBalanceSheet:
+          description: True if holding value can be counted for balance sheet calculations, False otherwise
+          examples:
+          - true
+          type: boolean
+        issueDate:
+          description: Date the FTF was issued, otherwise known as Subscription date
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        maturityActions:
+          description: Maturity actions (next actions) for this holding — what happens to the holding's value at maturity. Upcoming for live holdings; reflects the action(s) applied for matured or redeemed holdings. Empty if no actions are set.
+          items:
+            $ref: '#/components/schemas/MaturityAction'
+          type: array
+        maturityDate:
+          description: Date the FTF holding will mature
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        maturityValue:
+          description: Value at maturity
+          examples:
+          - 7000
+          type: number
+        maturityValueAdjustment:
+          description: Adjustment on the maturity value (usually 0)
+          examples:
+          - 0
+          type:
+          - number
+          - 'null'
+        mmyA365F:
+          description: Same return as `yield`, expressed in MMYA365F format. Use only when you specifically need this format.
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        name:
+          description: FTF name
+          examples:
+          - TreasurySpring Bluebird-IC GBP-BACR-1M/TEST0001/2024-5-14/2024-6-14
+          type:
+          - string
+          - 'null'
+        nextFinalYield:
+          description: Next final period yield, annualised APY (extendables only).
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        nextYield:
+          description: Next extension yield, annualised APY (extendables only).
+          examples:
+          - 5.5
+          type:
+          - number
+          - 'null'
+        obligorExposureCode:
+          description: Obligor Exposure Code
+          examples:
+          - BACR[GC]
+          type: string
+        obligorExposureName:
+          description: Obligor Exposure Name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        pricePerShare:
+          description: Price per share
+          examples:
+          - 10
+          type:
+          - number
+          - 'null'
+        productCode:
+          description: The FTF product code
+          examples:
+          - GBP-BACR[GC]-3M
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/HoldingStatusEnum'
+          description: The current status of the holding
+          examples:
+          - Issued
+        subscriptionUid:
+          description: The unique identifier for the subscription associated with the holding.
+          examples:
+          - dade0389c66241bd8366b017f1ffe19a
+          type:
+          - string
+          - 'null'
+        type:
+          description: The type of product, Fixed or Extendable
+          examples:
+          - Fixed
+          type: string
+        uid:
+          description: The unique identifier for the holding
+          examples:
+          - c660adab8e394383a3f839dd9d66bf9e
+          type: string
+        value:
+          description: Current value
+          examples:
+          - 6000
+          type: number
+        yield:
+          description: Current yield (annualised APY).
+          examples:
+          - 5
+          type:
+          - number
+          - 'null'
+      required:
+      - uid
+      - type
+      - entityCode
+      - cellCode
+      - obligorExposureCode
+      - obligorExposureName
+      - status
+      - cost
+      - value
+      - maturityValue
+      - issueDate
+      - maturityDate
+      - calendars
+      - isOnBalanceSheet
+      type: object
+      x-tags:
+      - Holdings
+    PaginatedHoldings:
+      description: PaginatedHoldings schema.
+      properties:
+        holdings:
+          items:
+            $ref: '#/components/schemas/Holding'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        valueDate:
+          description: Date of the response (London timezone)
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+      required:
+      - pageInfo
+      - holdings
+      - valueDate
+      type: object
+      x-tags:
+      - Holdings
+  securitySchemes:
+    basicAuth:
+      description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
+      scheme: basic
+      type: http
+    bearerAuth:
+      description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+      scheme: bearer
+      type: http
+x-tagGroups:
+- name: Guides
+  tags:
+  - Introduction
+  - FTF Lifecycle
+- name: Endpoints
+  tags:
+  - OAuth
+  - Holdings
+  - Indications
+  - Entities
+  - Cells
+  - Obligor Exposure
+  - Subscriptions
+  - Tasks
+  - Calendar
+  - Events
+  - Event Checkpoints
+  - Webhooks
+  - Healthcheck
+- name: Models
+  tags:
+  - Holding_model
+  - Indication_model
+  - Cell_model
+  - Obligor_model
+  - Subscription_model
+  - Task_model
+  - Entity_model
+  - User_permissions_model
+  - Holiday_model
+  - PageInfo_model
+  - Checkpoint_model
+- name: Event Models
+  tags:
+  - Event_model
+  - SubscribedEvent_model
+  - IssuedEvent_model
+  - SplitEvent_model
+  - ExtendedEvent_model
+  - FinalizedEvent_model
+  - AdjustedEvent_model
+  - CurrencyConvertedEvent_model
+  - CashMovedEvent_model
+  - RedeemedEvent_model
+  - CancelledEvent_model
+- name: MCP
+  tags:
+  - MCP
