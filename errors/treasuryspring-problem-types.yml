@@ -1,0 +1,23 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/treasuryspring-openapi-original.json
+format: fastapi-http-validation-error
+envelope:
+  media_type: application/json
+  schema: HTTPValidationError
+  shape: '{ "detail": [ { "loc": ["body","field"], "msg": "…", "type": "…" } ] }'
+  note: >-
+    Errors are NOT RFC 9457 application/problem+json. The only error response
+    declared in the OpenAPI is HTTP 422 (FastAPI-style validation error). Auth
+    failures (401/403), not-found (404) and rate/availability responses are
+    returned by the platform but are not enumerated in the published spec.
+problems:
+  - status: 422
+    title: Validation Error
+    schema: HTTPValidationError
+    detail_schema: ValidationError
+    description: >-
+      One or more request parameters or body fields failed validation. The `detail`
+      array lists each failure with its location (`loc`), a human message (`msg`)
+      and an error `type`.
+    applies_to: all operations that accept path/query/body parameters

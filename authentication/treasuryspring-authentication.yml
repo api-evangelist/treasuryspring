@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/treasuryspring-openapi-original.json
+docs: https://docs.treasuryspring.com/
+notes: >-
+  REST API uses OAuth 2.0 client-credentials: exchange base64 client_id:client_secret
+  (HTTP Basic) at POST /oauth/token for a Bearer access token (access_token,
+  expires_in, refresh_token). All other endpoints take Authorization: Bearer <token>
+  (an API Key or OAuth access token). The published MCP server uses the OAuth 2.0
+  authorization-code flow with PKCE backed by Auth0, and advertises Dynamic Client
+  Registration (RFC 7591) so clients need no pre-configured client_id.
+oauth2:
+  grant_types: [client_credentials, authorization_code]
+  token_endpoint: https://api.treasuryspring.com/api/v1/oauth/token
+  pkce: true
+  dynamic_client_registration: true
+  identity_provider: Auth0
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`).
+    Used by the OAuth token-exchange endpoint.'
+  sources:
+  - openapi/treasuryspring-openapi-original.json
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: 'API Key or OAuth access token (sent as `Authorization: Bearer <token>`).'
+  sources:
+  - openapi/treasuryspring-openapi-original.json

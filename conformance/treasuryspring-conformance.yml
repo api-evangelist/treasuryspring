@@ -1,0 +1,43 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/treasuryspring-openapi-original.json
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      REST API uses OAuth 2.0 client-credentials (POST /oauth/token, HTTP Basic
+      client_id:client_secret -> Bearer access token); MCP server uses OAuth 2.0
+      authorization-code with PKCE.
+  - id: oauth2-pkce
+    conforms: true
+    evidence: MCP server documents authorization-code flow with PKCE (RFC 7636).
+  - id: rfc7591-dynamic-client-registration
+    conforms: true
+    evidence: MCP OAuth (Auth0) advertises Dynamic Client Registration (RFC 7591).
+  - id: openapi-3.1
+    conforms: true
+    evidence: swagger.json declares openapi 3.1.0 with 60 component schemas.
+  - id: mcp-model-context-protocol
+    conforms: true
+    evidence: Published Streamable HTTP MCP server at /api/v1/mcp with 14 read-only tools.
+  - id: cursor-pagination
+    conforms: true
+    evidence: Event stream uses stable fence cursors (start_cursor/end_cursor, endCursor) with server-managed checkpoints.
+  - id: offset-pagination
+    conforms: true
+    evidence: List endpoints use limit/offset with PageInfo (hasNextPage/hasPreviousPage).
+  - id: webhooks
+    conforms: true
+    evidence: POST/DELETE /webhook register a callback URL for event notifications.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Validation errors (422) use FastAPI-style application/json HTTPValidationError
+      ({detail:[{loc,msg,type}]}), not application/problem+json.
+  - id: oidc
+    conforms: false
+    evidence: No OpenID Connect discovery document published on the API host.
+  - id: fapi
+    conforms: false
+  - id: json-api
+    conforms: false

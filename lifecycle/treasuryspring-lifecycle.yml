@@ -1,0 +1,23 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.treasuryspring.com/
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: v0.7.3
+  base_path: /api/v1
+  docs: https://docs.treasuryspring.com/api-reference
+  notes: >-
+    The API is served under /api/v1. The docs expose a "Legacy version" alongside
+    the current reference, indicating a versioned documentation surface.
+status_page: https://status.treasuryspring.com/
+health_check:
+  operation: openapi/treasuryspring-openapi-original.json#get.health
+  path: /health
+deprecation:
+  policy_url: null
+  sunset_header: null
+  notes: No formal deprecation/Sunset (RFC 8594) policy located in the public docs.
+sla:
+  url: null
+deprecated_operations: []

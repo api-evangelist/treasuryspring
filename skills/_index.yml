@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/treasuryspring-openapi-original.json
+skills:
+  - file: treasuryspring-authenticate-and-list-holdings.md
+    name: Authenticate and list holdings
+    api: openapi/treasuryspring-openapi-original.json
+    operations: [post.token, get.entities, get.holdings, get.holding]
+  - file: treasuryspring-subscribe-to-an-ftf.md
+    name: Subscribe to a Fixed Term Fund
+    api: openapi/treasuryspring-openapi-original.json
+    operations: [get.entities, get.indications, get.indication, post.validate, post.subscribe, get.subscription, get.holding]
+  - file: treasuryspring-reconcile-via-events.md
+    name: Reconcile holdings via the event stream and webhooks
+    api: openapi/treasuryspring-openapi-original.json
+    operations: [get.events, put.event.checkpoint, patch.event.checkpoint, post.webhook, delete.webhook]

@@ -1,0 +1,72 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://docs.treasuryspring.com/
+server:
+  name: treasuryspring
+  transport: http
+  streamable_http: true
+  url: https://api.treasuryspring.com/api/v1/mcp
+  description: >-
+    TreasurySpring's MCP server lets AI agents (Claude, ChatGPT, Cursor and other
+    MCP-compatible clients) access an authorised user's read-only investment data
+    via the Model Context Protocol. It is a thin layer over the same GraphQL backend
+    that powers the REST API, exposed via Streamable HTTP with OAuth 2.0.
+authentication:
+  type: oauth2
+  flow: authorization_code
+  pkce: true
+  dynamic_client_registration: true   # RFC 7591 — clients need no pre-configured client_id
+  identity_provider: Auth0
+  refresh_tokens: true
+  scope_note: access tokens are scoped to the authenticated user's entities only
+clients:
+  - Claude.ai (web) and Claude Desktop — Settings > Connectors > Add custom connector
+  - Cursor, VS Code and other MCP clients — remote MCP server entry pointing at the endpoint
+  - MCP Inspector (npx @modelcontextprotocol/inspector) for testing
+tools_readonly: true
+tools:
+  - name: get_entities
+    description: List entities (client organisations) the user has access to (code, name).
+    source_operation: openapi/treasuryspring-openapi-original.json#get.entities
+  - name: get_entity
+    description: Full profile of a specific entity by code.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.entity
+  - name: get_cells
+    description: List all fund cells the user has access to (code, name).
+    source_operation: openapi/treasuryspring-openapi-original.json#get.cell
+  - name: get_cell
+    description: Retrieve a single fund cell by code (documents, allowed obligor exposures).
+    source_operation: openapi/treasuryspring-openapi-original.json#get.cell
+  - name: get_obligor_exposure
+    description: Exposure information for a specific obligor (issuer/counterparty) by code.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.obligor_exposure
+  - name: get_indications
+    description: List indications (available investment opportunities) for an entity.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.indications
+  - name: get_indication
+    description: Full details for a single indication by entity code and uid.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.indication
+  - name: get_subscriptions
+    description: List subscriptions (investment orders) for an entity.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.subscriptions
+  - name: get_subscription
+    description: Full details for a single subscription by uid (incl. signer, releaser).
+    source_operation: openapi/treasuryspring-openapi-original.json#get.subscription
+  - name: get_holdings
+    description: List paginated holdings (active investment positions) for an entity.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.holdings
+  - name: get_holding
+    description: Retrieve a single holding by uid.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.holding
+  - name: get_holding_indications
+    description: Indications available against a specific holding (roll/switch options).
+    source_operation: openapi/treasuryspring-openapi-original.json#get.holding_indications
+  - name: get_holding_extensions
+    description: Extension history of an extendable holding, most recent first.
+    source_operation: openapi/treasuryspring-openapi-original.json#get.holding_extensions
+example_prompts:
+  - Which entities do I have access to?
+  - List my current holdings for entity ACME maturing before March 2027.
+  - What investment indications are available for entity ACME today?
+  - Has subscription abcd1234 been issued as a live holding yet?

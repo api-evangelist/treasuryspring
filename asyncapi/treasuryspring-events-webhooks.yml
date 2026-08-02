@@ -1,0 +1,55 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/treasuryspring-openapi-original.json
+spec_type: Webhooks
+summary: >-
+  TreasurySpring exposes a normalised event surface for integration and reconciliation
+  in two ways: a pull-based cursor event stream (GET /event with server-managed
+  checkpoints) and push-based webhooks (POST /webhook to register a callback URL,
+  DELETE /webhook to deregister). Events are discriminated by `eventType`. No standalone
+  AsyncAPI document is published by the provider; this is the honest webhook/event catalog.
+transport:
+  pull_stream:
+    operation: openapi/treasuryspring-openapi-original.json#get.events
+    path: /event
+    style: cursor
+    checkpoints:
+      - openapi/treasuryspring-openapi-original.json#put.event.checkpoint
+      - openapi/treasuryspring-openapi-original.json#get.event.checkpoint
+      - openapi/treasuryspring-openapi-original.json#patch.event.checkpoint
+      - openapi/treasuryspring-openapi-original.json#delete.event.checkpoint
+  webhooks:
+    register: openapi/treasuryspring-openapi-original.json#post.webhook
+    deregister: openapi/treasuryspring-openapi-original.json#delete.webhook
+    body: '{ "url": "https://example.com/webhook" }'
+event_types:
+  - type: SUBSCRIBED
+    schema: SubscribedEvent
+    description: A subscription request was submitted.
+  - type: ISSUED
+    schema: IssuedEvent
+    description: An accepted subscription was issued as a live holding.
+  - type: SPLIT
+    schema: SplitEvent
+    description: A holding was split.
+  - type: EXTENDED
+    schema: ExtendedEvent
+    description: An extendable holding was extended (new yield, price, maturity date).
+  - type: FINALIZED
+    schema: FinalizedEvent
+    description: A holding's terms were finalized.
+  - type: ADJUSTED
+    schema: AdjustedEvent
+    description: A holding was adjusted.
+  - type: CURRENCY_CONVERTED
+    schema: CurrencyConvertedEvent
+    description: A currency conversion was applied.
+  - type: CASH_MOVED
+    schema: CashMovedEvent
+    description: Cash was moved.
+  - type: REDEEMED
+    schema: RedeemedEvent
+    description: A holding was redeemed at maturity.
+  - type: CANCELLED
+    schema: CancelledEvent
+    description: A subscription or holding was cancelled.

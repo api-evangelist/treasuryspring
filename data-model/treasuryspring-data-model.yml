@@ -1,0 +1,91 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/treasuryspring-openapi-original.json
+entities:
+  - name: Entity
+    key: code
+    description: A client organisation the API user can act on behalf of.
+  - name: Cell
+    key: code
+    description: The investment fund vehicle (fund cell) that holds assets.
+  - name: ObligorExposure
+    key: code
+    description: An issuer/counterparty (e.g. a bank) and the exposure/risk limits against it.
+  - name: Indication
+    key: uid
+    description: An available investment opportunity (a subscribable Fixed Term Fund product).
+  - name: Subscription
+    key: uid
+    description: A request to invest in an FTF; resolves into a Holding once processed.
+  - name: Holding
+    key: uid
+    description: A live investment record (source of truth) created from an accepted subscription.
+  - name: Extension
+    description: A record in an extendable holding's extension history (yield, price, new maturity).
+  - name: MaturityAction
+    description: The action to take at a holding's maturity.
+  - name: Task
+    key: uid
+    description: A pending task requiring the user to act (e.g. sign/release a subscription).
+  - name: Event
+    key: eventType
+    description: A normalised lifecycle event (SUBSCRIBED, ISSUED, EXTENDED, REDEEMED, ...).
+  - name: Holiday
+    description: Calendar holiday used for settlement/date calculations.
+relationships:
+  - from: Subscription
+    to: Entity
+    type: belongs_to
+    via: entity_code
+  - from: Subscription
+    to: Indication
+    type: belongs_to
+    via: indicationUid
+  - from: Subscription
+    to: Holding
+    type: has_one
+    via: holdingUid
+  - from: Subscription
+    to: Cell
+    type: belongs_to
+    via: cellCode
+  - from: Subscription
+    to: ObligorExposure
+    type: belongs_to
+    via: obligorExposureCode
+  - from: Holding
+    to: Entity
+    type: belongs_to
+    via: entityCode
+  - from: Holding
+    to: Cell
+    type: belongs_to
+    via: cellCode
+  - from: Holding
+    to: ObligorExposure
+    type: belongs_to
+    via: obligorExposureCode
+  - from: Holding
+    to: Extension
+    type: has_many
+    via: holding extension history
+  - from: Holding
+    to: MaturityAction
+    type: has_many
+    via: maturity-action
+  - from: Holding
+    to: Indication
+    type: has_many
+    via: holding indications (roll/switch options)
+  - from: Indication
+    to: Cell
+    type: belongs_to
+    via: cellCode
+  - from: Indication
+    to: ObligorExposure
+    type: belongs_to
+    via: obligorExposureCode
+  - from: Cell
+    to: ObligorExposure
+    type: has_many
+    via: allowedObligorExposures

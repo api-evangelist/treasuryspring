@@ -1,0 +1,38 @@
+{
+  "provider": "treasuryspring",
+  "sources": [
+    "treasuryspring-calendar-api-openapi.yml",
+    "treasuryspring-cells-api-openapi.yml",
+    "treasuryspring-entities-api-openapi.yml",
+    "treasuryspring-event-checkpoints-api-openapi.yml",
+    "treasuryspring-events-api-openapi.yml",
+    "treasuryspring-healthcheck-api-openapi.yml",
+    "treasuryspring-holdings-api-openapi.yml",
+    "treasuryspring-indications-api-openapi.yml",
+    "treasuryspring-oauth-api-openapi.yml",
+    "treasuryspring-obligor-exposure-api-openapi.yml",
+    "treasuryspring-subscriptions-api-openapi.yml",
+    "treasuryspring-tasks-api-openapi.yml",
+    "treasuryspring-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "treasuryspring-calendar-api-openapi.yml",
+    "treasuryspring-cells-api-openapi.yml",
+    "treasuryspring-entities-api-openapi.yml",
+    "treasuryspring-event-checkpoints-api-openapi.yml",
+    "treasuryspring-events-api-openapi.yml",
+    "treasuryspring-healthcheck-api-openapi.yml",
+    "treasuryspring-holdings-api-openapi.yml",
+    "treasuryspring-indications-api-openapi.yml",
+    "treasuryspring-oauth-api-openapi.yml",
+    "treasuryspring-obligor-exposure-api-openapi.yml",
+    "treasuryspring-subscriptions-api-openapi.yml",
+    "treasuryspring-tasks-api-openapi.yml",
+    "treasuryspring-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for TreasurySpring Public API
+  version: 1.0.0
+extends: openapi/treasuryspring-openapi-original.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-21'
+      x-apievangelist-artifacts:
+        authentication: authentication/treasuryspring-authentication.yml
+        mcp: mcp/treasuryspring-mcp.yml
+        conventions: conventions/treasuryspring-conventions.yml
+        errors: errors/treasuryspring-problem-types.yml
+        lifecycle: lifecycle/treasuryspring-lifecycle.yml
+        webhooks: asyncapi/treasuryspring-events-webhooks.yml
+        data_model: data-model/treasuryspring-data-model.yml
+        agent_skills: skills/_index.yml
+  - target: $.info
+    update:
+      x-apievangelist-category: institutional-cash-management
+      x-apievangelist-agent-ready: true
+  - target: $.servers
+    update:
+      - url: https://api.treasuryspring.com/api/v1
+        description: Production
+      - url: https://api.sandbox.treasuryspring.com/api/v1
+        description: Sandbox (test environment)

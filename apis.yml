@@ -1,8 +1,27 @@
 aid: treasuryspring
-name: Treasuryspring
-description: Treasuryspring is a company surfaced as a portfolio company of anthemis, balderton-capital
-  and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the
-  enrichment pipeline.
+name: TreasurySpring
+description: >-
+  TreasurySpring is a digital platform for institutional cash management that helps
+  organisations holding large excess cash balances minimise risk, maximise return and
+  optimise time by diversifying across secure counterparties via standardised Fixed
+  Term Funds (FTFs). Its Public API (OpenAPI 3.1) gives an authorised user programmatic
+  access to their entities, fund cells, obligor exposures, indications, subscriptions,
+  holdings, tasks and a normalised event stream — the full FTF lifecycle from
+  subscription to live holding — with OAuth 2.0 auth, offset and cursor pagination,
+  webhooks, and a published, read-only Model Context Protocol (MCP) server for AI agents.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://treasuryspring.com/hubfs/cropped-TS_Icon_Master_01-32x32.png
 url: https://raw.githubusercontent.com/api-evangelist/treasuryspring/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,15 +32,304 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Fintech
+- Cash Management
+- Treasury
+- Investments
+- Financial Services
+- Fixed Term Funds
+- Payments
+- MCP
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: treasuryspring:treasuryspring-calendar-api
+  name: TreasurySpring Calendar API
+  description: Get Calendar information
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Calendar
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-calendar-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-cells-api
+  name: TreasurySpring Cells API
+  description: Get information about Cells
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Cells
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-cells-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-entities-api
+  name: TreasurySpring Entities API
+  description: Get information about Entities
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-entities-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-event-checkpoints-api
+  name: TreasurySpring Event Checkpoints API
+  description: >-
+    Server-managed cursors for stateless event stream consumers.
+
+
+    In most cases, checkpoints are not needed. If your system can persist data locally (e.g. in a database,
+    file, or key-value store), store the `cursor` value from `GET /event` yourself and pass it as `start_cursor`
+    on the next request.
+
+
+    **When to use checkpoints:**
+
+
+    Use this endpoint if your system runs in an environment that cannot reliably persist state between
+    invocations — for example, a stateless function, a script with no backing store, or a system that
+    delegates position tracking to TreasurySpring entirely.
+
+
+    A checkpoint is a named record stored server-side that remembers where your last successful sync run
+    ended. Instead of storing the cursor yourself, you store it here and retrieve it at the start of each
+    sync run:
+
+
+    1. **Create** a checkpoint once: `PUT /event/checkpoint/{name}` — the cursor is initialised to the
+    current end of the event stream.
+
+    2. **Read** the checkpoint at the start of each sync run: `GET /event/checkpoint/{name}` → `cursor`,
+    `checkpointVersion`.
+
+    3. **Fetch events** from that cursor: `GET /event?start_cursor={cursor}`.
+
+    4. **Advance** the checkpoint after successful processing: `PATCH /event/checkpoint/{name}` with `expectedCheckpointVersion`
+    and `newCursor`. The `checkpointVersion` acts as a safety check — if another process has already advanced
+    the checkpoint since you last read it, the request returns a 409 Conflict with the current state so
+    you can reconcile before retrying.
+
+
+    Checkpoints are scoped to the authenticated API user.
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Event Checkpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-event-checkpoints-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-events-api
+  name: TreasurySpring Events API
+  description: Stream of normalised events for integration and reconciliation
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-healthcheck-api
+  name: TreasurySpring Healthcheck API
+  description: Check the status of the API
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Healthcheck
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-healthcheck-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-holdings-api
+  name: TreasurySpring Holdings API
+  description: >-
+    Get information about holdings. For how subscriptions become holdings and how holdings move through
+    their lifecycle, see the FTF Lifecycle section.
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Holdings
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-holdings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-indications-api
+  name: TreasurySpring Indications API
+  description: Get information about Indications
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Indications
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-indications-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-oauth-api
+  name: TreasurySpring OAuth API
+  description: >-
+    OAuth 2.0 endpoint to exchange your Client Credentials for a token. This token can then be used to
+    access the API.
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-oauth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-obligor-exposure-api
+  name: TreasurySpring Obligor Exposure API
+  description: Get information about Obligors
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Obligor Exposure
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-obligor-exposure-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-subscriptions-api
+  name: TreasurySpring Subscriptions API
+  description: FTF Subscriptions
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-tasks-api
+  name: TreasurySpring Tasks API
+  description: Get information about Pending Tasks
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-webhooks-api
+  name: TreasurySpring Webhooks API
+  description: Integrate with webhooks to receive notifications
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
 common:
+# --- Artifacts (canonical scored pointers) ---
+- type: OpenAPI
+  url: openapi/treasuryspring-openapi-original.json
+- type: Authentication
+  url: authentication/treasuryspring-authentication.yml
+- type: MCPServer
+  url: mcp/treasuryspring-mcp.yml
+- type: WellKnown
+  url: well-known/treasuryspring-well-known.yml
+- type: LLMsTxt
+  url: llms/treasuryspring-llms.txt
+- type: Overlay
+  url: overlays/treasuryspring-openapi-overlay.yaml
+- type: Conformance
+  url: conformance/treasuryspring-conformance.yml
+- type: ErrorCatalog
+  url: errors/treasuryspring-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/treasuryspring-lifecycle.yml
+- type: StatusPage
+  url: https://status.treasuryspring.com/
+- type: Conventions
+  url: conventions/treasuryspring-conventions.yml
+- type: Sandbox
+  url: sandbox/treasuryspring-sandbox.yml
+- type: DataModel
+  url: data-model/treasuryspring-data-model.yml
+- type: Webhooks
+  url: asyncapi/treasuryspring-events-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/treasuryspring-agentic-access.yml
+- type: DomainSecurity
+  url: security/treasuryspring-domain-security.yml
+# --- Identity / link-properties ---
 - type: Website
   url: https://www.treasuryspring.com/
+- type: DeveloperPortal
+  url: https://docs.treasuryspring.com/
+- type: GettingStarted
+  url: https://docs.treasuryspring.com/
+- type: StatusPage
+  url: https://status.treasuryspring.com/
+- type: Blog
+  url: https://treasuryspring.com/insights
+- type: SignUp
+  url: https://app.treasuryspring.com/auth/login
+- type: Login
+  url: https://app.treasuryspring.com/auth/login
+- type: TermsOfService
+  url: https://treasuryspring.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://treasuryspring.com/privacy-policy
+- type: Support
+  url: mailto:api-support@treasuryspring.com
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

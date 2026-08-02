@@ -1,0 +1,42 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.treasuryspring.com/
+authentication:
+  style: oauth2-client-credentials + bearer
+  token_endpoint: POST /oauth/token
+  header: 'Authorization: Bearer <access_token>'
+  detail: authentication/treasuryspring-authentication.yml
+content_type:
+  request: application/json (POST/PUT/PATCH bodies); application/x-www-form-urlencoded for /oauth/token
+  response: application/json
+pagination:
+  list_endpoints:
+    style: offset
+    params: [limit, offset]
+    response_fields: [PageInfo.hasNextPage, PageInfo.hasPreviousPage, PageInfo.limit]
+    applies_to: [/entity, /holding, /subscription, /indication, holding extensions]
+  event_stream:
+    style: cursor
+    params: [start_cursor, end_cursor, min_created_at, limit]
+    response_fields: [EventPageInfo.endCursor, EventPageInfo.hasNextPage, EventPageInfo.limit]
+    checkpoints: >-
+      Server-managed cursors via /event/checkpoint (PUT create/get, GET read,
+      PATCH advance, DELETE remove) let stateless consumers resume the stream.
+idempotency:
+  supported: false
+  notes: >-
+    No idempotency-key header or parameter is documented in the API reference or
+    present in the OpenAPI. Write operations (/subscribe, /webhook, /task) are not
+    advertised as idempotent; use /validate before /subscribe to pre-check a request.
+error_envelope:
+  media_type: application/json
+  shape: '{ "detail": [ { "loc": [...], "msg": "…", "type": "…" } ] }'
+  detail: errors/treasuryspring-problem-types.yml
+events_and_webhooks:
+  detail: asyncapi/treasuryspring-events-webhooks.yml
+versioning:
+  detail: lifecycle/treasuryspring-lifecycle.yml
+rate_limiting:
+  documented: false
+  notes: No published rate-limit headers or quota documented in the public reference.
+date_format: 'YYYY-MM-DD for date filters; ISO 8601 timestamps for event created_at'

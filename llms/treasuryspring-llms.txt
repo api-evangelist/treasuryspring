@@ -1,0 +1,49 @@
+# TreasurySpring
+
+> TreasurySpring is a digital platform for institutional cash management. Its Public API (OpenAPI 3.1) gives an authorised user programmatic access to their entities, cells, obligor exposures, indications, subscriptions, holdings, tasks and a normalised event stream — the full Fixed Term Fund (FTF) lifecycle from subscription to live holding. A published, read-only MCP server exposes the same investment data to AI agents.
+
+## APIs
+
+- [TreasurySpring Public API (docs)](https://docs.treasuryspring.com/): Guides + API reference, OAuth 2.0, sandbox and an embedded API explorer.
+- [API reference](https://docs.treasuryspring.com/api-reference): Endpoint reference generated from the OpenAPI 3.1 schema.
+- [OpenAPI 3.1 schema](https://docs.treasuryspring.com/swagger.json): Machine-readable spec, 25 paths / 31 operations / 60 schemas.
+- Production base URL: `https://api.treasuryspring.com/api/v1`
+- Sandbox base URL: `https://api.sandbox.treasuryspring.com/api/v1`
+
+## Core endpoints
+
+- `POST /oauth/token`: Exchange client credentials (HTTP Basic client_id:client_secret) for a Bearer access token.
+- `GET /entity`, `GET /entity/{code}`: The organisations your API user can act on behalf of.
+- `GET /indication/{code}`, `GET /indication/{code}/{uid}`: Available investment opportunities (FTFs).
+- `POST /validate`, `POST /subscribe`: Validate then submit a subscription request into an FTF.
+- `GET /subscription`, `GET /subscription/{entity_code}/{uid}`: Track subscriptions until a holdingUid is issued.
+- `GET /holding`, `GET /holding/{entity_code}/{holding_uid}`: Live investment records (source of truth).
+- `GET /event`, event checkpoints: Cursor-based stream of normalised events for integration and reconciliation.
+- `POST /webhook`, `DELETE /webhook`: Register/deregister a callback URL for event notifications.
+- `GET /health`: Health check.
+
+## Agents
+
+- [MCP server](https://api.treasuryspring.com/api/v1/mcp): Streamable HTTP, OAuth 2.0 authorization-code + PKCE (Auth0), Dynamic Client Registration (RFC 7591). 14 read-only tools (get_entities, get_holdings, get_indications, get_subscriptions, get_cells, get_obligor_exposure, ...).
+
+## Docs
+
+- [Guides](https://docs.treasuryspring.com/): Getting started and workflow guides ("from subscription to holding in five calls").
+- [FTF lifecycle](https://docs.treasuryspring.com/): How subscriptions become live holdings (Fixed vs Extendable).
+- [Status page](https://status.treasuryspring.com/)
+- [Terms of Use](https://treasuryspring.com/terms-of-use/)
+- [Privacy Policy](https://treasuryspring.com/privacy-policy)
+- [Insights (blog)](https://treasuryspring.com/insights)
+- Support: api-support@treasuryspring.com
+
+## Repo artifacts
+
+- OpenAPI: openapi/treasuryspring-openapi-original.json
+- Authentication: authentication/treasuryspring-authentication.yml
+- MCP server: mcp/treasuryspring-mcp.yml
+- Conventions: conventions/treasuryspring-conventions.yml
+- Errors: errors/treasuryspring-problem-types.yml
+- Lifecycle: lifecycle/treasuryspring-lifecycle.yml
+- Webhooks/events: asyncapi/treasuryspring-events-webhooks.yml
+- Data model: data-model/treasuryspring-data-model.yml
+- Agent skills: skills/_index.yml

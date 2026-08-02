@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.treasuryspring.com/
+environments:
+  - name: sandbox
+    base_url: https://api.sandbox.treasuryspring.com/api/v1
+    token_endpoint: https://api.sandbox.treasuryspring.com/api/v1/oauth/token
+    purpose: >-
+      Test environment for exercising the full FTF lifecycle (validate, subscribe,
+      track subscription -> holding, consume events/webhooks) without touching
+      production positions. The docs describe an embedded API explorer for trying
+      calls interactively.
+  - name: production
+    base_url: https://api.treasuryspring.com/api/v1
+test_credentials:
+  note: >-
+    Sandbox access uses OAuth 2.0 client-credentials issued to your TreasurySpring
+    account for the sandbox environment. TreasurySpring does not publish shared/
+    universal test credentials or magic test values in the public docs, so none are
+    recorded here (no fabrication). Request sandbox client_id/client_secret via your
+    account or api-support@treasuryspring.com.
+api_explorer: https://docs.treasuryspring.com/api-reference
