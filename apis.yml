@@ -274,7 +274,7 @@ apis:
 common:
 # --- Artifacts (canonical scored pointers) ---
 - type: OpenAPI
-  url: openapi/treasuryspring-openapi-original.json
+  url: openapi/_original/treasuryspring-openapi-original.json
 - type: Authentication
   url: authentication/treasuryspring-authentication.yml
 - type: MCPServer
