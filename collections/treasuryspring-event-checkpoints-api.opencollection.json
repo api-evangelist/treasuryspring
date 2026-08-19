@@ -1,0 +1,149 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Event Checkpoints API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Event Checkpoints",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List event checkpoints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/event/checkpoint",
+            "params": [
+              {
+                "name": "name_prefix",
+                "value": "",
+                "type": "query",
+                "description": "Filter checkpoints whose name starts with this prefix"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of checkpoints to return"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return all event checkpoints for the authenticated user, ordered by name."
+        },
+        {
+          "info": {
+            "name": "Get an event checkpoint by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/event/checkpoint/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return a single event checkpoint by name."
+        },
+        {
+          "info": {
+            "name": "Create or get an event checkpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.treasuryspring.com/api/v1/event/checkpoint/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new named event checkpoint, or return the existing one if it already exists.\n\nOn creation, the cursor is initialised to initial_cursor if provided, or to the current\nend of the event stream otherwise. initial_cursor is ignored if the checkpoint already exists."
+        },
+        {
+          "info": {
+            "name": "Advance an event checkpoint cursor",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.treasuryspring.com/api/v1/event/checkpoint/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Advance the checkpoint to a new cursor position.\n\nSupply the `new_cursor` to move to. If you also provide the\n`expected_checkpoint_version` from the last read, the request uses it as an optimistic\nlock and returns 409 Conflict if the checkpoint has changed since you last read it."
+        },
+        {
+          "info": {
+            "name": "Delete an event checkpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.treasuryspring.com/api/v1/event/checkpoint/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "expected_checkpoint_version",
+                "value": "",
+                "type": "query",
+                "description": "Optional checkpointVersion from your last read of this checkpoint. If supplied, it is used as an optimistic lock."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a named event checkpoint.\n\nIf `expected_checkpoint_version` is supplied, the request uses it as an optimistic\nlock and returns 409 Conflict if the checkpoint has been modified since you last read it."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

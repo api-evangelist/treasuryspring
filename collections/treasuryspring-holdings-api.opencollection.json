@@ -1,0 +1,244 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Holdings API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Holdings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of all holdings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/holding",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "",
+                "type": "query",
+                "description": "Parameter to filter holdings by entity code"
+              },
+              {
+                "name": "min_subscription_date",
+                "value": "2025-01-01",
+                "type": "query",
+                "description": "Parameter to filter holdings by minimum subscription date"
+              },
+              {
+                "name": "max_subscription_date",
+                "value": "2025-02-01",
+                "type": "query",
+                "description": "Parameter to filter holdings by maximum subscription date"
+              },
+              {
+                "name": "min_maturity_date",
+                "value": "2025-01-01",
+                "type": "query",
+                "description": "Parameter to filter holdings by minimum maturity date"
+              },
+              {
+                "name": "max_maturity_date",
+                "value": "2025-02-01",
+                "type": "query",
+                "description": "Parameter to filter holdings by maximum maturity date"
+              },
+              {
+                "name": "min_modified_date",
+                "value": "2025-01-01",
+                "type": "query",
+                "description": "Parameter to filter holdings by modification date"
+              },
+              {
+                "name": "limit",
+                "value": "100",
+                "type": "query",
+                "description": "Page size used for pagination"
+              },
+              {
+                "name": "offset",
+                "value": "0",
+                "type": "query",
+                "description": "Offset used for pagination"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a list of all holdings that the user has permission to view."
+        },
+        {
+          "info": {
+            "name": "Get a single holding by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/holding/:entity_code/:holding_uid",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "holding_uid",
+                "value": "0cf3256ab8744fe293a5011cbebda7f1",
+                "type": "path",
+                "description": "Holding uid"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves data for a single holding if the user has permission to view it."
+        },
+        {
+          "info": {
+            "name": "Get the extension history for a holding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/holding/:entity_code/:holding_uid/extension",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "holding_uid",
+                "value": "0cf3256ab8744fe293a5011cbebda7f1",
+                "type": "path",
+                "description": "Holding uid"
+              },
+              {
+                "name": "limit",
+                "value": "100",
+                "type": "query",
+                "description": "Page size used for pagination"
+              },
+              {
+                "name": "offset",
+                "value": "0",
+                "type": "query",
+                "description": "Offset used for pagination"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the extension history of an extendable holding, most recent first. Each extension records the\nyield, price per share, and new maturity date applied at that extension. Fixed holdings have no extensions."
+        },
+        {
+          "info": {
+            "name": "Get the indications available for a holding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/holding/:entity_code/:holding_uid/indication",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "holding_uid",
+                "value": "0cf3256ab8744fe293a5011cbebda7f1",
+                "type": "path",
+                "description": "Holding uid"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the indications available against a holding — for example, the FTFs a holding can roll\nor switch into at maturity. Use these `uid`s when setting the holding's maturity action."
+        },
+        {
+          "info": {
+            "name": "Get a list of maturity actions for a specific holding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/holding/:entity_code/:holding_uid/maturity-action",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "holding_uid",
+                "value": "0cf3256ab8744fe293a5011cbebda7f1",
+                "type": "path",
+                "description": "Holding uid"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of maturity actions for a single holding"
+        },
+        {
+          "info": {
+            "name": "Update the maturity action for a holding",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.treasuryspring.com/api/v1/holding/:entity_code/:holding_uid/maturity-action",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "holding_uid",
+                "value": "0cf3256ab8744fe293a5011cbebda7f1",
+                "type": "path",
+                "description": "uid of the holding whose maturity action is being modified."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates the maturity action for an existing holding. This operation applies to the entire holding amount and\nwill overwrite any next actions that have been set. For more granular control over next actions, use the\nTreasurySpring portal."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

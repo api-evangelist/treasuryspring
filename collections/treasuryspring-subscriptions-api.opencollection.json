@@ -1,0 +1,150 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Subscriptions API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscriptions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Subscribe to an FTF",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.treasuryspring.com/api/v1/subscribe",
+            "headers": [
+              {
+                "name": "idempotency-key",
+                "value": "1063fdc18c7b44e193a01c4f3834907b"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Subscribe to an FTF"
+        },
+        {
+          "info": {
+            "name": "Get a list of all subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/subscription",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "",
+                "type": "query",
+                "description": "Parameter to filter subscriptions by entity code"
+              },
+              {
+                "name": "min_subscription_date",
+                "value": "2025-01-01",
+                "type": "query",
+                "description": "Parameter to filter subscriptions by minimum subscription date"
+              },
+              {
+                "name": "max_subscription_date",
+                "value": "2025-02-01",
+                "type": "query",
+                "description": "Parameter to filter subscriptions by maximum subscription date"
+              },
+              {
+                "name": "min_maturity_date",
+                "value": "2025-01-01",
+                "type": "query",
+                "description": "Parameter to filter subscriptions by minimum maturity date"
+              },
+              {
+                "name": "max_maturity_date",
+                "value": "2025-02-01",
+                "type": "query",
+                "description": "Parameter to filter subscriptions by maximum maturity date"
+              },
+              {
+                "name": "limit",
+                "value": "100",
+                "type": "query",
+                "description": "Page size used for pagination"
+              },
+              {
+                "name": "offset",
+                "value": "0",
+                "type": "query",
+                "description": "Offset used for pagination"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a list of all subscriptions that the user has permission to view."
+        },
+        {
+          "info": {
+            "name": "Get a single subscription by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/subscription/:entity_code/:uid",
+            "params": [
+              {
+                "name": "entity_code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "uid",
+                "value": "8a1f37f521f146dbaa4a333d0bc26158",
+                "type": "path",
+                "description": "Subscription uid"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single subscription if the user has permission to view it. Useful for tracking a\nsubscription returned by `/subscribe` until its `holdingUid` is populated. Once `holdingUid`\nexists, treat the holding as the live source of truth."
+        },
+        {
+          "info": {
+            "name": "Validate a prospective subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.treasuryspring.com/api/v1/validate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Validate a prospective subscription without committing to it.\n\nConfirms the indication is still available to this entity on the chosen subscription date and that\nthe amount is within the indication's permitted limits, returning the matching indication (including\nits current pricing). Use this as a pre-flight check before calling `/subscribe`. A 4xx response\nindicates the prospective subscription would be rejected."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

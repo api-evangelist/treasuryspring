@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar OAuth API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get OAuth Access Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.treasuryspring.com/api/v1/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "client_id",
+                  "value": ""
+                },
+                {
+                  "name": "client_secret",
+                  "value": ""
+                },
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Exchange OAuth credentials for a bearer access token. This single endpoint serves all three\nsupported grant types, selected by the `grant_type` form field. The client authenticates with\nHTTP Basic auth (`client_id:client_secret`, base64-encoded) in the `Authorization` header.\n\n| `grant_type` | Flow | Required fields (besides `grant_type` and `client_id`) |\n|---|---|---|\n| `client_credentials` | Client Credentials | `client_secret` |\n| `authorization_code` | Code Authorisation | `code`, plus `red"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

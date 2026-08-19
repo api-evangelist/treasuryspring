@@ -1,0 +1,459 @@
+{
+  "item": [
+    {
+      "id": "1c977c25-1502-40fa-8b4a-ac883ec8adcd",
+      "name": "Tasks",
+      "description": {
+        "content": "Get information about Pending Tasks",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fabda760-5adc-4142-bd7a-1507a8d12c4e",
+          "name": "Get a list of all pending tasks",
+          "request": {
+            "name": "Get a list of all pending tasks",
+            "description": {
+              "content": "Retrieves a list of all pending tasks that the user has.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5f380f51-84da-4776-b309-d820601df6b4",
+              "name": "List of pending tasks",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"uid\": \"edd29e94ebe2417f8fedbcbdc039da84\",\n    \"data\": {\n      \"schema\": {\n        \"description\": \"<table>\\n <tbody>\\n <tr>\\n <th>User: </th>\\n <td>example@treasuryspring.com</td>\\n </tr>\\n <tr>\\n <th>First name: </th>\\n <td>John</td>\\n </tr>\\n <tr>\\n <th>Last name: </th>\\n <td>Doe</td>\\n </tr>\\n <tr>\\n <th>Role: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Entity: </th>\\n <td>TEST0001</td>\\n </tr>\\n <tr>\\n <th>Branding: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Include in default mailing list: </th>\\n <td>True</td>\\n </tr>\\n <tr>\\n <th>Phone: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Send welcome email: </th>\\n <td>True</td>\\n </tr>\\n </tbody>\\n</table>\",\n        \"properties\": {\n          \"approve\": {\n            \"type\": \"boolean\"\n          }\n        },\n        \"type\": \"object\"\n      },\n      \"ui\": {}\n    },\n    \"expiry\": \"2024-01-01T00:00:00\"\n  },\n  {\n    \"uid\": \"edd29e94ebe2417f8fedbcbdc039da84\",\n    \"data\": {\n      \"schema\": {\n        \"description\": \"<table>\\n <tbody>\\n <tr>\\n <th>User: </th>\\n <td>example@treasuryspring.com</td>\\n </tr>\\n <tr>\\n <th>First name: </th>\\n <td>John</td>\\n </tr>\\n <tr>\\n <th>Last name: </th>\\n <td>Doe</td>\\n </tr>\\n <tr>\\n <th>Role: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Entity: </th>\\n <td>TEST0001</td>\\n </tr>\\n <tr>\\n <th>Branding: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Include in default mailing list: </th>\\n <td>True</td>\\n </tr>\\n <tr>\\n <th>Phone: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Send welcome email: </th>\\n <td>True</td>\\n </tr>\\n </tbody>\\n</table>\",\n        \"properties\": {\n          \"approve\": {\n            \"type\": \"boolean\"\n          }\n        },\n        \"type\": \"object\"\n      },\n      \"ui\": {}\n    },\n    \"expiry\": \"2024-01-01T00:00:00\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "58aeb785-39cf-47cd-883b-cff8da8a1660",
+          "name": "Get single pending task",
+          "request": {
+            "name": "Get single pending task",
+            "description": {
+              "content": "Retrieves a pending task by uid.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task",
+                ":uid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uid",
+                  "description": "(Required) Task uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "83042e6b-6895-47c8-b8f4-b4dab921fc32",
+              "name": "Info on pending task",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Task uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uid\": \"edd29e94ebe2417f8fedbcbdc039da84\",\n  \"data\": {\n    \"schema\": {\n      \"description\": \"<table>\\n <tbody>\\n <tr>\\n <th>User: </th>\\n <td>example@treasuryspring.com</td>\\n </tr>\\n <tr>\\n <th>First name: </th>\\n <td>John</td>\\n </tr>\\n <tr>\\n <th>Last name: </th>\\n <td>Doe</td>\\n </tr>\\n <tr>\\n <th>Role: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Entity: </th>\\n <td>TEST0001</td>\\n </tr>\\n <tr>\\n <th>Branding: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Include in default mailing list: </th>\\n <td>True</td>\\n </tr>\\n <tr>\\n <th>Phone: </th>\\n <td>None</td>\\n </tr>\\n <tr>\\n <th>Send welcome email: </th>\\n <td>True</td>\\n </tr>\\n </tbody>\\n</table>\",\n      \"properties\": {\n        \"approve\": {\n          \"type\": \"boolean\"\n        }\n      },\n      \"type\": \"object\"\n    },\n    \"ui\": {}\n  },\n  \"expiry\": \"2024-01-01T00:00:00\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c65af07-27f2-4d23-8edc-e606e3e5d75f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Task uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "19e76547-75fd-4243-a96b-7ad0e70160b4",
+          "name": "Submit a task",
+          "request": {
+            "name": "Submit a task",
+            "description": {
+              "content": "Used to approve or deny a pending task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task",
+                ":uid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uid",
+                  "description": "(Required) Task uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4c4027c5-94c8-43ff-9da3-ec40fbdba24f",
+              "name": "Status of submitted task",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Task uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"approved\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a7bae2ee-acf5-4e0d-b63d-f85c61677e63",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Task uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"approved\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "463d8499-f3b3-4ac4-8c69-f0b044583059",
+    "name": "TreasurySpring Public Calendar Tasks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

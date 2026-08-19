@@ -1,0 +1,188 @@
+{
+  "item": [
+    {
+      "id": "f93f5ab2-725c-4824-b760-472749e83ea9",
+      "name": "Obligor Exposure",
+      "description": {
+        "content": "Get information about Obligors",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d6c84b57-090c-420c-9227-bfa8f4275aeb",
+          "name": "Get data for obligor exposure by code",
+          "request": {
+            "name": "Get data for obligor exposure by code",
+            "description": {
+              "content": "Retrieves data for a single Obligor.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "obligor-exposure",
+                ":code"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "code",
+                  "description": "(Required) Obligor code"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "10a8e057-b9cf-4d07-8128-61b11ffdc6e4",
+              "name": "Retrieves obligor exposure information.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "obligor-exposure",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Obligor code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"BACR[GC]\",\n  \"name\": \"Barclays Bank Plc [Gov secured]\",\n  \"obligorCode\": \"BACR\",\n  \"assetDescription\": \"string\",\n  \"creditUrl\": \"string\",\n  \"description\": \"Barclays Bank Plc provides banking and financial services as part of the Barclays plc group.\",\n  \"lei\": \"529900T8BM49AURSDO55\",\n  \"sector\": \"Secured Financial\",\n  \"url\": \"https://home.barclays/\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a0707c81-8804-4a79-8288-9f8ea395a77a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "obligor-exposure",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Obligor code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "af41df00-9367-41f7-ae3a-b0cf61b1b81d",
+    "name": "TreasurySpring Public Calendar Obligor Exposure API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "item": [
+    {
+      "id": "1b92787b-1121-4a2b-89dd-528b6371206f",
+      "name": "Healthcheck",
+      "description": {
+        "content": "Check the status of the API",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "02392387-43bb-438d-b72c-5eb00e826731",
+          "name": "Perform a Health Check",
+          "request": {
+            "name": "Perform a Health Check",
+            "description": {
+              "content": "Perform a health check by returning a JSON response with a status code of 200 (OK).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "health"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3dfc3614-868e-4b76-8a57-0ac1266cef1f",
+              "name": "Return HTTP Status Code 200 (OK)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "health"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"OK\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "61551da8-7d04-4ab3-9274-82b0aa7898d7",
+    "name": "TreasurySpring Public Calendar Healthcheck API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

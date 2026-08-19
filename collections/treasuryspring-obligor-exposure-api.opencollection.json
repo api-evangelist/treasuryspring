@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Obligor Exposure API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Obligor Exposure",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get data for obligor exposure by code",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/obligor-exposure/:code",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "Obligor code"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves data for a single Obligor."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

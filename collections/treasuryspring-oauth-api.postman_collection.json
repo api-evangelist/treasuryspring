@@ -1,0 +1,202 @@
+{
+  "item": [
+    {
+      "id": "1a47dde9-f279-47b9-8c65-51320f81b535",
+      "name": "OAuth",
+      "description": {
+        "content": "OAuth 2.0 endpoint to exchange your Client Credentials for a token. This token can then be used to access the API.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e43beb7e-612f-4a69-a84e-a57629c54a24",
+          "name": "Get OAuth Access Token",
+          "request": {
+            "name": "Get OAuth Access Token",
+            "description": {
+              "content": "Exchange OAuth credentials for a bearer access token. This single endpoint serves all three\nsupported grant types, selected by the `grant_type` form field. The client authenticates with\nHTTP Basic auth (`client_id:client_secret`, base64-encoded) in the `Authorization` header.\n\n| `grant_type` | Flow | Required fields (besides `grant_type` and `client_id`) |\n|---|---|---|\n| `client_credentials` | Client Credentials | `client_secret` |\n| `authorization_code` | Code Authorisation | `code`, plus `redirect_uri` if multiple are registered |\n| `refresh_token` | Code Authorisation | `refresh_token` |\n\nThe `authorization_code` and `refresh_token` grants belong to the Code Authorisation flow, whose\nconsent redirect happens in the browser before this exchange. See the\n[Code Authorisation guide](/docs/guide/code-authorisation) for the full flow and redirect URI rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{oauth-token-Url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "grant_type",
+                  "value": "<string>",
+                  "description": "(Required) The type of grant being requested."
+                },
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<string>",
+                  "description": "(Required) The client id."
+                },
+                {
+                  "disabled": false,
+                  "key": "client_secret",
+                  "value": "<string>",
+                  "description": "(Required) The client secret for client credentials flow."
+                },
+                {
+                  "disabled": false,
+                  "key": "redirect_uri",
+                  "value": "<string>",
+                  "description": "The redirect URI used in the authorization request. Required for the authorization_code grant when the client has more than one registered redirect URI."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "075d99fa-4589-46f2-9b60-5359d62170d5",
+              "name": "OAuth access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{oauth-token-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The type of grant being requested.",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "client_credentials"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The client id.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "0fd5a813dca24bd09fdd04b8a5f3fc98"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The client secret for client credentials flow.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_secret",
+                      "value": "6bcbe24146864fddbff048173006d9f9"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The redirect URI used in the authorization request. Required for the authorization_code grant when the client has more than one registered redirect URI.",
+                        "type": "text/plain"
+                      },
+                      "key": "redirect_uri",
+                      "value": "https://example.com/oauth/callback"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"19fececa27edf4638a1c0024ee2ea7136\",\n  \"expires_in\": 3600,\n  \"token_type\": \"bearer\",\n  \"refresh_token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com",
+      "key": "oauth-token-Url"
+    }
+  ],
+  "info": {
+    "_postman_id": "67b2804f-e7fe-4104-bc77-680a4b0b56c8",
+    "name": "TreasurySpring Public Calendar OAuth API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

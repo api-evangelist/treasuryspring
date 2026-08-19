@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Indications API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Indications",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of all indications",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/indication/:code",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "Entity code"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a list of all Indications that the user has permission to view."
+        },
+        {
+          "info": {
+            "name": "Get a single indication by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/indication/:code/:uid",
+            "params": [
+              {
+                "name": "code",
+                "value": "TEST0001",
+                "type": "path",
+                "description": "Entity code"
+              },
+              {
+                "name": "uid",
+                "value": "8ca8f50d3ef44a43962998a5533f0cfa",
+                "type": "path",
+                "description": "Indication uid"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single Indication if the user has permission to view it."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

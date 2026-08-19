@@ -1,0 +1,1248 @@
+{
+  "item": [
+    {
+      "id": "f57bbda9-44cb-4093-966a-77e3a263c1f4",
+      "name": "Holdings",
+      "description": {
+        "content": "Get information about holdings. For how subscriptions become holdings and how holdings move through their lifecycle, see the FTF Lifecycle section.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "90f545b2-4194-4022-820a-1ad22d6403f7",
+          "name": "Get a list of all holdings",
+          "request": {
+            "name": "Get a list of all holdings",
+            "description": {
+              "content": "Retrieves a list of all holdings that the user has permission to view.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "entity_code",
+                  "value": "<string,null>",
+                  "description": "Parameter to filter holdings by entity code"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_subscription_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter holdings by minimum subscription date"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_subscription_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter holdings by maximum subscription date"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_maturity_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter holdings by minimum maturity date"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_maturity_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter holdings by maximum maturity date"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_modified_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter holdings by modification date"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Page size used for pagination"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offset used for pagination"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "92f8bc18-5ac7-454a-a98c-94e041d21a07",
+              "name": "List of holdings",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_code",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_subscription_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_subscription_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_maturity_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_maturity_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_modified_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pageInfo\": {\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false,\n    \"limit\": 100,\n    \"offset\": 0,\n    \"totalCount\": 200\n  },\n  \"holdings\": [\n    {\n      \"uid\": \"c660adab8e394383a3f839dd9d66bf9e\",\n      \"type\": \"Fixed\",\n      \"entityCode\": \"TEST0001\",\n      \"cellCode\": \"Example-IC\",\n      \"obligorExposureCode\": \"BACR[GC]\",\n      \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n      \"status\": \"Issued\",\n      \"cost\": 5000,\n      \"value\": 6000,\n      \"maturityValue\": 7000,\n      \"issueDate\": \"2024-01-01\",\n      \"maturityDate\": \"2025-01-01\",\n      \"calendars\": [\n        \"TreasurySpring\",\n        \"United Kingdom\"\n      ],\n      \"isOnBalanceSheet\": true,\n      \"currency\": \"GBP\",\n      \"cutoffDatetime\": \"2024-04-15T12:15:00\",\n      \"extendedMaturityDate\": \"2025-01-01\",\n      \"extensionOptionDate\": \"2025-01-01\",\n      \"extensionStartDate\": \"2025-01-01\",\n      \"extensionStartValue\": 5000,\n      \"finalYield\": 0,\n      \"finalized\": true,\n      \"maturityActions\": [\n        {\n          \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n          \"type\": \"ROLL\",\n          \"amount\": 5000,\n          \"currency\": \"GBP\",\n          \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n          \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n        },\n        {\n          \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n          \"type\": \"ROLL\",\n          \"amount\": 5000,\n          \"currency\": \"GBP\",\n          \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n          \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n        }\n      ],\n      \"maturityValueAdjustment\": 0,\n      \"mmyA365F\": 5.5,\n      \"name\": \"TreasurySpring Bluebird-IC GBP-BACR-1M/TEST0001/2024-5-14/2024-6-14\",\n      \"nextFinalYield\": 5.5,\n      \"nextYield\": 5.5,\n      \"pricePerShare\": 10,\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\",\n      \"yield\": 5\n    },\n    {\n      \"uid\": \"c660adab8e394383a3f839dd9d66bf9e\",\n      \"type\": \"Fixed\",\n      \"entityCode\": \"TEST0001\",\n      \"cellCode\": \"Example-IC\",\n      \"obligorExposureCode\": \"BACR[GC]\",\n      \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n      \"status\": \"Issued\",\n      \"cost\": 5000,\n      \"value\": 6000,\n      \"maturityValue\": 7000,\n      \"issueDate\": \"2024-01-01\",\n      \"maturityDate\": \"2025-01-01\",\n      \"calendars\": [\n        \"TreasurySpring\",\n        \"United Kingdom\"\n      ],\n      \"isOnBalanceSheet\": true,\n      \"currency\": \"GBP\",\n      \"cutoffDatetime\": \"2024-04-15T12:15:00\",\n      \"extendedMaturityDate\": \"2025-01-01\",\n      \"extensionOptionDate\": \"2025-01-01\",\n      \"extensionStartDate\": \"2025-01-01\",\n      \"extensionStartValue\": 5000,\n      \"finalYield\": 0,\n      \"finalized\": true,\n      \"maturityActions\": [\n        {\n          \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n          \"type\": \"ROLL\",\n          \"amount\": 5000,\n          \"currency\": \"GBP\",\n          \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n          \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n        },\n        {\n          \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n          \"type\": \"ROLL\",\n          \"amount\": 5000,\n          \"currency\": \"GBP\",\n          \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n          \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n        }\n      ],\n      \"maturityValueAdjustment\": 0,\n      \"mmyA365F\": 5.5,\n      \"name\": \"TreasurySpring Bluebird-IC GBP-BACR-1M/TEST0001/2024-5-14/2024-6-14\",\n      \"nextFinalYield\": 5.5,\n      \"nextYield\": 5.5,\n      \"pricePerShare\": 10,\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\",\n      \"yield\": 5\n    }\n  ],\n  \"valueDate\": \"2025-01-01\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b15c113-21b9-4b88-81fc-86eb309311b6",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_code",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_subscription_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_subscription_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_maturity_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_maturity_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_modified_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6935285c-9af2-442a-9df4-082ea5ce758f",
+          "name": "Get a single holding by id",
+          "request": {
+            "name": "Get a single holding by id",
+            "description": {
+              "content": "Retrieves data for a single holding if the user has permission to view it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding",
+                ":entity_code",
+                ":holding_uid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "holding_uid",
+                  "description": "(Required) Holding uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a2672a4b-b936-462d-8994-bc8621325d3d",
+              "name": "Holding information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"holding\": {\n    \"uid\": \"c660adab8e394383a3f839dd9d66bf9e\",\n    \"type\": \"Fixed\",\n    \"entityCode\": \"TEST0001\",\n    \"cellCode\": \"Example-IC\",\n    \"obligorExposureCode\": \"BACR[GC]\",\n    \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n    \"status\": \"Issued\",\n    \"cost\": 5000,\n    \"value\": 6000,\n    \"maturityValue\": 7000,\n    \"issueDate\": \"2024-01-01\",\n    \"maturityDate\": \"2025-01-01\",\n    \"calendars\": [\n      \"TreasurySpring\",\n      \"United Kingdom\"\n    ],\n    \"isOnBalanceSheet\": true,\n    \"currency\": \"GBP\",\n    \"cutoffDatetime\": \"2024-04-15T12:15:00\",\n    \"extendedMaturityDate\": \"2025-01-01\",\n    \"extensionOptionDate\": \"2025-01-01\",\n    \"extensionStartDate\": \"2025-01-01\",\n    \"extensionStartValue\": 5000,\n    \"finalYield\": 0,\n    \"finalized\": true,\n    \"maturityActions\": [\n      {\n        \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n        \"type\": \"ROLL\",\n        \"amount\": 5000,\n        \"currency\": \"GBP\",\n        \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n        \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n      },\n      {\n        \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n        \"type\": \"ROLL\",\n        \"amount\": 5000,\n        \"currency\": \"GBP\",\n        \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n        \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n      }\n    ],\n    \"maturityValueAdjustment\": 0,\n    \"mmyA365F\": 5.5,\n    \"name\": \"TreasurySpring Bluebird-IC GBP-BACR-1M/TEST0001/2024-5-14/2024-6-14\",\n    \"nextFinalYield\": 5.5,\n    \"nextYield\": 5.5,\n    \"pricePerShare\": 10,\n    \"productCode\": \"GBP-BACR[GC]-3M\",\n    \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\",\n    \"yield\": 5\n  },\n  \"valueDate\": \"2025-01-01\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57808779-77bb-40f7-abab-10c8159ac2cb",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "59b660dc-8df0-459b-a3e9-3fa683665a48",
+          "name": "Get the extension history for a holding",
+          "request": {
+            "name": "Get the extension history for a holding",
+            "description": {
+              "content": "Retrieves the extension history of an extendable holding, most recent first. Each extension records the\nyield, price per share, and new maturity date applied at that extension. Fixed holdings have no extensions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding",
+                ":entity_code",
+                ":holding_uid",
+                "extension"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Page size used for pagination"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offset used for pagination"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "holding_uid",
+                  "description": "(Required) Holding uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "658fa922-a8a1-413c-87eb-f364c9ad2db8",
+              "name": "Paginated list of extensions for the holding",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "extension"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pageInfo\": {\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false,\n    \"limit\": 100,\n    \"offset\": 0,\n    \"totalCount\": 200\n  },\n  \"extensions\": [\n    {\n      \"uid\": \"bcee2bb8569d406c9251dcc9bee38aff\",\n      \"date\": \"2024-01-01\",\n      \"maturity\": \"2024-02-01\",\n      \"yield\": 5,\n      \"pricePerShare\": 1.05,\n      \"finalYield\": 5\n    },\n    {\n      \"uid\": \"bcee2bb8569d406c9251dcc9bee38aff\",\n      \"date\": \"2024-01-01\",\n      \"maturity\": \"2024-02-01\",\n      \"yield\": 5,\n      \"pricePerShare\": 1.05,\n      \"finalYield\": 5\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cea2a8c7-59f5-4ec2-a094-dbde279b5b90",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "extension"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "29435895-71ba-4ac3-bd05-e0bf1385c3e8",
+          "name": "Get the indications available for a holding",
+          "request": {
+            "name": "Get the indications available for a holding",
+            "description": {
+              "content": "Retrieves the indications available against a holding — for example, the FTFs a holding can roll\nor switch into at maturity. Use these `uid`s when setting the holding's maturity action.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding",
+                ":entity_code",
+                ":holding_uid",
+                "indication"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "holding_uid",
+                  "description": "(Required) Holding uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5cab49d9-91f0-4f45-91bb-8e2a9ecd9f63",
+              "name": "List of indications available against the holding",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "indication"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n    \"type\": \"Fixed\",\n    \"currency\": \"GBP\",\n    \"issueDate\": \"2024-01-01\",\n    \"subscriptionDates\": [\n      \"2024-01-01\"\n    ],\n    \"cutoffTime\": \"12:15:00\",\n    \"maturityDate\": \"2025-01-01\",\n    \"indicativeYield\": 5.5,\n    \"maximum\": 100,\n    \"cellCode\": \"Example-IC\",\n    \"obligorExposureCode\": \"BACR\",\n    \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n    \"enabled\": true,\n    \"term\": \"3m\",\n    \"restricted\": false,\n    \"calendars\": [\n      \"TreasurySpring\",\n      \"United Kingdom\"\n    ],\n    \"enforceMinimum\": true,\n    \"enforceMaximum\": true,\n    \"created\": \"2024-01-01T00:00:00\",\n    \"expiry\": \"2025-01-01T00:00:00\",\n    \"extensionDays\": 7,\n    \"finalDays\": 45,\n    \"indicativeFinalYield\": 5.5,\n    \"minExtensions\": 7,\n    \"minimum\": 10,\n    \"nbPenaltyExtensions\": 7,\n    \"optionDate\": \"2025-01-01\",\n    \"productCode\": \"GBP-BACR[GC]-3M\",\n    \"sector\": \"Financial\"\n  },\n  {\n    \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n    \"type\": \"Fixed\",\n    \"currency\": \"GBP\",\n    \"issueDate\": \"2024-01-01\",\n    \"subscriptionDates\": [\n      \"2024-01-01\"\n    ],\n    \"cutoffTime\": \"12:15:00\",\n    \"maturityDate\": \"2025-01-01\",\n    \"indicativeYield\": 5.5,\n    \"maximum\": 100,\n    \"cellCode\": \"Example-IC\",\n    \"obligorExposureCode\": \"BACR\",\n    \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n    \"enabled\": true,\n    \"term\": \"3m\",\n    \"restricted\": false,\n    \"calendars\": [\n      \"TreasurySpring\",\n      \"United Kingdom\"\n    ],\n    \"enforceMinimum\": true,\n    \"enforceMaximum\": true,\n    \"created\": \"2024-01-01T00:00:00\",\n    \"expiry\": \"2025-01-01T00:00:00\",\n    \"extensionDays\": 7,\n    \"finalDays\": 45,\n    \"indicativeFinalYield\": 5.5,\n    \"minExtensions\": 7,\n    \"minimum\": 10,\n    \"nbPenaltyExtensions\": 7,\n    \"optionDate\": \"2025-01-01\",\n    \"productCode\": \"GBP-BACR[GC]-3M\",\n    \"sector\": \"Financial\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2b224711-f434-44ed-85fa-ff8cc0fa8da3",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "indication"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0b3716da-3797-430d-88fc-c96375aea441",
+          "name": "Get a list of maturity actions for a specific holding",
+          "request": {
+            "name": "Get a list of maturity actions for a specific holding",
+            "description": {
+              "content": "Get a list of maturity actions for a single holding",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding",
+                ":entity_code",
+                ":holding_uid",
+                "maturity-action"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "holding_uid",
+                  "description": "(Required) Holding uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1f354ce5-4062-4150-abc2-8e10b74db394",
+              "name": "Maturity actions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "maturity-action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n    \"type\": \"ROLL\",\n    \"amount\": 5000,\n    \"currency\": \"GBP\",\n    \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n    \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n  },\n  {\n    \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n    \"type\": \"ROLL\",\n    \"amount\": 5000,\n    \"currency\": \"GBP\",\n    \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n    \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "046e05a9-beb0-417d-b862-5e77eed9f1a6",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "maturity-action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) Holding uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cfc28204-ac6f-4582-ab97-0f5b23ee6107",
+          "name": "Update the maturity action for a holding",
+          "request": {
+            "name": "Update the maturity action for a holding",
+            "description": {
+              "content": "Updates the maturity action for an existing holding. This operation applies to the entire holding amount and\nwill overwrite any next actions that have been set. For more granular control over next actions, use the\nTreasurySpring portal.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "holding",
+                ":entity_code",
+                ":holding_uid",
+                "maturity-action"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "holding_uid",
+                  "description": "(Required) uid of the holding whose maturity action is being modified."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"<string>\",\n  \"indicationUid\": \"<string,null>\",\n  \"reason\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7dfd3394-c9c3-469b-82b5-8d87ab7af5b5",
+              "name": "Maturity actions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "maturity-action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) uid of the holding whose maturity action is being modified."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"ROLL\",\n  \"indicationUid\": \"f952ed5df4g84f8gh148f4f8sf6g4\",\n  \"reason\": \"Better terms elsewhere\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"entityCode\": \"TEST0001\",\n  \"holdingUid\": \"16cdb3fe25e743fc9eed4b9742869424\",\n  \"maturityActions\": [\n    {\n      \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n      \"type\": \"ROLL\",\n      \"amount\": 5000,\n      \"currency\": \"GBP\",\n      \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n    },\n    {\n      \"uid\": \"96cd54e5ddfd41b0a77afef15a96660d\",\n      \"type\": \"ROLL\",\n      \"amount\": 5000,\n      \"currency\": \"GBP\",\n      \"holdingUid\": \"74628ebad0f54881b3c76acf146eb3c3\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a21a30e2-9de9-4425-bdc3-9ed432331f8f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "holding",
+                    ":entity_code",
+                    ":holding_uid",
+                    "maturity-action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "holding_uid",
+                      "description": "(Required) uid of the holding whose maturity action is being modified."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"ROLL\",\n  \"indicationUid\": \"f952ed5df4g84f8gh148f4f8sf6g4\",\n  \"reason\": \"Better terms elsewhere\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "bb81cde8-5ca9-4ef0-a9fd-3ae3d54c94aa",
+    "name": "TreasurySpring Public Calendar Holdings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

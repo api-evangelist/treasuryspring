@@ -1,0 +1,620 @@
+{
+  "item": [
+    {
+      "id": "dd62cb75-8b3d-4be6-899e-150744a933af",
+      "name": "Event Checkpoints",
+      "description": {
+        "content": "Server-managed cursors for stateless event stream consumers.\n\nIn most cases, checkpoints are not needed. If your system can persist data locally (e.g. in a database, file, or key-value store), store the `cursor` value from `GET /event` yourself and pass it as `start_cursor` on the next request.\n\n**When to use checkpoints:**\n\nUse this endpoint if your system runs in an environment that cannot reliably persist state between invocations — for example, a stateless function, a script with no backing store, or a system that delegates position tracking to TreasurySpring entirely.\n\nA checkpoint is a named record stored server-side that remembers where your last successful sync run ended. Instead of storing the cursor yourself, you store it here and retrieve it at the start of each sync run:\n\n1. **Create** a checkpoint once: `PUT /event/checkpoint/{name}` — the cursor is initialised to the current end of the event stream.\n2. **Read** the checkpoint at the start of each sync run: `GET /event/checkpoint/{name}` → `cursor`, `checkpointVersion`.\n3. **Fetch events** from that cursor: `GET /event?start_cursor={cursor}`.\n4. **Advance** the checkpoint after successful processing: `PATCH /event/checkpoint/{name}` with `expectedCheckpointVersion` and `newCursor`. The `checkpointVersion` acts as a safety check — if another process has already advanced the checkpoint since you last read it, the request returns a 409 Conflict with the current state so you can reconcile before retrying.\n\nCheckpoints are scoped to the authenticated API user.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1dcdcde5-be5f-4bda-91e6-2aaca59472a9",
+          "name": "List event checkpoints",
+          "request": {
+            "name": "List event checkpoints",
+            "description": {
+              "content": "Return all event checkpoints for the authenticated user, ordered by name.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event",
+                "checkpoint"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "name_prefix",
+                  "value": "<string,null>",
+                  "description": "Filter checkpoints whose name starts with this prefix"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of checkpoints to return"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b508c50a-1f0c-4942-bde1-00eb7ace5a2e",
+              "name": "List of checkpoints for the authenticated user",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event",
+                    "checkpoint"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name_prefix",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"checkpoints\": [\n    {\n      \"uid\": \"01JKXYZ...\",\n      \"name\": \"my-checkpoint\",\n      \"cursor\": \"ev1....\",\n      \"checkpointVersion\": \"ec1....\",\n      \"updatedAt\": \"2024-01-01T00:00:00Z\"\n    },\n    {\n      \"uid\": \"01JKXYZ...\",\n      \"name\": \"my-checkpoint\",\n      \"cursor\": \"ev1....\",\n      \"checkpointVersion\": \"ec1....\",\n      \"updatedAt\": \"2024-01-01T00:00:00Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28b5d747-288b-457b-9ecb-e973cd5d659b",
+          "name": "Delete an event checkpoint",
+          "request": {
+            "name": "Delete an event checkpoint",
+            "description": {
+              "content": "Delete a named event checkpoint.\n\nIf `expected_checkpoint_version` is supplied, the request uses it as an optimistic\nlock and returns 409 Conflict if the checkpoint has been modified since you last read it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event",
+                "checkpoint",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expected_checkpoint_version",
+                  "value": "<string,null>",
+                  "description": "Optional checkpointVersion from your last read of this checkpoint. If supplied, it is used as an optimistic lock."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "aed39df6-666f-431a-aafd-ae1921e9b2a6",
+              "name": "Deletion confirmation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event",
+                    "checkpoint",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expected_checkpoint_version",
+                      "value": "<string,null>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"checkpoint\": {\n    \"uid\": \"string\",\n    \"name\": \"string\"\n  },\n  \"deleted\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d0fe111d-e665-4e2d-9ce5-b9fc2ddbfbe4",
+          "name": "Get an event checkpoint by name",
+          "request": {
+            "name": "Get an event checkpoint by name",
+            "description": {
+              "content": "Return a single event checkpoint by name.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event",
+                "checkpoint",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ce5aa32b-b9dc-46ec-9ab0-d88bb2f987bb",
+              "name": "Checkpoint state",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event",
+                    "checkpoint",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"checkpoint\": {\n    \"uid\": \"01JKXYZ...\",\n    \"name\": \"my-checkpoint\",\n    \"cursor\": \"ev1....\",\n    \"checkpointVersion\": \"ec1....\",\n    \"updatedAt\": \"2024-01-01T00:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ba5d632c-2df2-4f76-aec5-bbc4113955a7",
+          "name": "Advance an event checkpoint cursor",
+          "request": {
+            "name": "Advance an event checkpoint cursor",
+            "description": {
+              "content": "Advance the checkpoint to a new cursor position.\n\nSupply the `new_cursor` to move to. If you also provide the\n`expected_checkpoint_version` from the last read, the request uses it as an optimistic\nlock and returns 409 Conflict if the checkpoint has changed since you last read it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event",
+                "checkpoint",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"new_cursor\": \"<string>\",\n  \"expected_checkpoint_version\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "43c17047-3c0b-4597-9c4a-5353d4e12aa6",
+              "name": "Updated checkpoint state",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event",
+                    "checkpoint",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"new_cursor\": \"ev1....\",\n  \"expected_checkpoint_version\": \"ec1....\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"checkpoint\": {\n    \"uid\": \"01JKXYZ...\",\n    \"name\": \"my-checkpoint\",\n    \"cursor\": \"ev1....\",\n    \"checkpointVersion\": \"ec1....\",\n    \"updatedAt\": \"2024-01-01T00:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e481c6a4-93b4-4b52-9951-f311fbd0400b",
+          "name": "Create or get an event checkpoint",
+          "request": {
+            "name": "Create or get an event checkpoint",
+            "description": {
+              "content": "Create a new named event checkpoint, or return the existing one if it already exists.\n\nOn creation, the cursor is initialised to initial_cursor if provided, or to the current\nend of the event stream otherwise. initial_cursor is ignored if the checkpoint already exists.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event",
+                "checkpoint",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"initial_cursor\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d6dbd4ec-259c-4ce8-9c78-c3dad62fb727",
+              "name": "Checkpoint state with created flag",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event",
+                    "checkpoint",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"initial_cursor\": \"ev1....\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"checkpoint\": {\n    \"uid\": \"01JKXYZ...\",\n    \"name\": \"my-checkpoint\",\n    \"cursor\": \"ev1....\",\n    \"checkpointVersion\": \"ec1....\",\n    \"updatedAt\": \"2024-01-01T00:00:00Z\"\n  },\n  \"created\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "82ff777a-b3f4-41de-bb65-ea4adf52daef",
+    "name": "TreasurySpring Public Calendar Event Checkpoints API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

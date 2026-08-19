@@ -1,0 +1,776 @@
+{
+  "item": [
+    {
+      "id": "a1e05707-14b4-4165-9b6b-cc5554bac295",
+      "name": "Subscriptions",
+      "description": {
+        "content": "FTF Subscriptions",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "00325943-081b-43d6-a04f-73307894a1b7",
+          "name": "Subscribe to an FTF",
+          "request": {
+            "name": "Subscribe to an FTF",
+            "description": {
+              "content": "Subscribe to an FTF",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "subscribe"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Idempotency Key used to ensure that the same request is not processed more than once. If the same request is received more than once, the second request will be ignored. **Each valid new request must have a different Idempotency Key** (*It is recommended to use a UUID as the Idempotency Key*)",
+                "key": "idempotency-key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entityCode\": \"<string>\",\n  \"indicationUid\": \"<string>\",\n  \"amount\": \"<number>\",\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"<string,null-date>\",\n  \"withdrawal_date\": \"<string,null-date>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c16d7b87-4d26-49a9-9c53-67f9f165b634",
+              "name": "Subscription details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscribe"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Idempotency Key used to ensure that the same request is not processed more than once. If the same request is received more than once, the second request will be ignored. **Each valid new request must have a different Idempotency Key** (*It is recommended to use a UUID as the Idempotency Key*)",
+                    "key": "idempotency-key",
+                    "value": "1063fdc18c7b44e193a01c4f3834907b"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityCode\": \"TEST0001\",\n  \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n  \"amount\": 1000,\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\",\n  \"withdrawal_date\": \"2025-01-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uid\": \"8a1f37f521f146dbaa4a333d0bc26158\",\n  \"amount\": 1000,\n  \"entityCode\": \"TEST0001\",\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\",\n  \"cutoffDatetime\": \"2024-01-01T12:15:00\",\n  \"status\": \"PENDING\",\n  \"currency\": \"GBP\",\n  \"cellCode\": \"Example-IC\",\n  \"maturityDate\": \"2025-01-01\",\n  \"obligorExposureCode\": \"BACR[GC]\",\n  \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n  \"productCode\": \"GBP-BACR[GC]-3M\",\n  \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n  \"indicationUid\": \"ef8b318a15b04784ba86c8667727d78b\",\n  \"releaserEmail\": \"example@treasuryspring.com\",\n  \"signerEmail\": \"example@treasuryspring.com\",\n  \"yield\": 5\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f908a6b-7501-46a9-a873-35c12d8fdd53",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscribe"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Idempotency Key used to ensure that the same request is not processed more than once. If the same request is received more than once, the second request will be ignored. **Each valid new request must have a different Idempotency Key** (*It is recommended to use a UUID as the Idempotency Key*)",
+                    "key": "idempotency-key",
+                    "value": "1063fdc18c7b44e193a01c4f3834907b"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityCode\": \"TEST0001\",\n  \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n  \"amount\": 1000,\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\",\n  \"withdrawal_date\": \"2025-01-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5f4c3f02-f443-471c-9454-ecb06b585ebf",
+          "name": "Get a list of all subscriptions",
+          "request": {
+            "name": "Get a list of all subscriptions",
+            "description": {
+              "content": "Retrieves a list of all subscriptions that the user has permission to view.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "subscription"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "entity_code",
+                  "value": "<string,null>",
+                  "description": "Parameter to filter subscriptions by entity code"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_subscription_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter subscriptions by minimum subscription date"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_subscription_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter subscriptions by maximum subscription date"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_maturity_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter subscriptions by minimum maturity date"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_maturity_date",
+                  "value": "<string,null-date>",
+                  "description": "Parameter to filter subscriptions by maximum maturity date"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Page size used for pagination"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offset used for pagination"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d78e8de0-c4c0-458e-a797-eba18c57c08d",
+              "name": "List of subscriptions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscription"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_code",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_subscription_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_subscription_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_maturity_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_maturity_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pageInfo\": {\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false,\n    \"limit\": 100,\n    \"offset\": 0,\n    \"totalCount\": 200\n  },\n  \"subscriptions\": [\n    {\n      \"uid\": \"8a1f37f521f146dbaa4a333d0bc26158\",\n      \"amount\": 1000,\n      \"entityCode\": \"TEST0001\",\n      \"maturityAction\": \"Roll\",\n      \"source\": \"As per Master Subscription Agreement\",\n      \"subscriptionDate\": \"2024-01-01\",\n      \"cutoffDatetime\": \"2024-01-01T12:15:00\",\n      \"status\": \"PENDING\",\n      \"currency\": \"GBP\",\n      \"cellCode\": \"Example-IC\",\n      \"maturityDate\": \"2025-01-01\",\n      \"obligorExposureCode\": \"BACR[GC]\",\n      \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n      \"indicationUid\": \"ef8b318a15b04784ba86c8667727d78b\",\n      \"releaserEmail\": \"example@treasuryspring.com\",\n      \"signerEmail\": \"example@treasuryspring.com\",\n      \"yield\": 5\n    },\n    {\n      \"uid\": \"8a1f37f521f146dbaa4a333d0bc26158\",\n      \"amount\": 1000,\n      \"entityCode\": \"TEST0001\",\n      \"maturityAction\": \"Roll\",\n      \"source\": \"As per Master Subscription Agreement\",\n      \"subscriptionDate\": \"2024-01-01\",\n      \"cutoffDatetime\": \"2024-01-01T12:15:00\",\n      \"status\": \"PENDING\",\n      \"currency\": \"GBP\",\n      \"cellCode\": \"Example-IC\",\n      \"maturityDate\": \"2025-01-01\",\n      \"obligorExposureCode\": \"BACR[GC]\",\n      \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n      \"indicationUid\": \"ef8b318a15b04784ba86c8667727d78b\",\n      \"releaserEmail\": \"example@treasuryspring.com\",\n      \"signerEmail\": \"example@treasuryspring.com\",\n      \"yield\": 5\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cfc7dcd7-343a-4743-8b1f-30cc6e80c091",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscription"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_code",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_subscription_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_subscription_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "min_maturity_date",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "max_maturity_date",
+                      "value": "2025-02-01"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3df2f683-bbb6-44e3-b745-f91dc062e531",
+          "name": "Get a single subscription by id",
+          "request": {
+            "name": "Get a single subscription by id",
+            "description": {
+              "content": "Retrieves a single subscription if the user has permission to view it. Useful for tracking a\nsubscription returned by `/subscribe` until its `holdingUid` is populated. Once `holdingUid`\nexists, treat the holding as the live source of truth.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "subscription",
+                ":entity_code",
+                ":uid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uid",
+                  "description": "(Required) Subscription uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "89aadb9d-a3bf-4d74-9ee4-53d49c80d446",
+              "name": "Subscription information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscription",
+                    ":entity_code",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Subscription uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uid\": \"8a1f37f521f146dbaa4a333d0bc26158\",\n  \"amount\": 1000,\n  \"entityCode\": \"TEST0001\",\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\",\n  \"cutoffDatetime\": \"2024-01-01T12:15:00\",\n  \"status\": \"PENDING\",\n  \"currency\": \"GBP\",\n  \"cellCode\": \"Example-IC\",\n  \"maturityDate\": \"2025-01-01\",\n  \"obligorExposureCode\": \"BACR[GC]\",\n  \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n  \"productCode\": \"GBP-BACR[GC]-3M\",\n  \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n  \"indicationUid\": \"ef8b318a15b04784ba86c8667727d78b\",\n  \"releaserEmail\": \"example@treasuryspring.com\",\n  \"signerEmail\": \"example@treasuryspring.com\",\n  \"yield\": 5\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa771391-41c7-4298-be6d-73004fd68fe3",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "subscription",
+                    ":entity_code",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Subscription uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "79b2e7d6-a715-4582-a926-96d84a160b6a",
+          "name": "Validate a prospective subscription",
+          "request": {
+            "name": "Validate a prospective subscription",
+            "description": {
+              "content": "Validate a prospective subscription without committing to it.\n\nConfirms the indication is still available to this entity on the chosen subscription date and that\nthe amount is within the indication's permitted limits, returning the matching indication (including\nits current pricing). Use this as a pre-flight check before calling `/subscribe`. A 4xx response\nindicates the prospective subscription would be rejected.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "validate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entityCode\": \"<string>\",\n  \"indicationUid\": \"<string>\",\n  \"amount\": \"<number>\",\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"<string,null-date>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b914e470-c118-4792-84aa-ae5d3e64e88f",
+              "name": "The matching indication if the prospective subscription is valid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityCode\": \"TEST0001\",\n  \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n  \"amount\": 1000,\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n  \"type\": \"Fixed\",\n  \"currency\": \"GBP\",\n  \"issueDate\": \"2024-01-01\",\n  \"subscriptionDates\": [\n    \"2024-01-01\"\n  ],\n  \"cutoffTime\": \"12:15:00\",\n  \"maturityDate\": \"2025-01-01\",\n  \"indicativeYield\": 5.5,\n  \"maximum\": 100,\n  \"cellCode\": \"Example-IC\",\n  \"obligorExposureCode\": \"BACR\",\n  \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n  \"enabled\": true,\n  \"term\": \"3m\",\n  \"restricted\": false,\n  \"calendars\": [\n    \"TreasurySpring\",\n    \"United Kingdom\"\n  ],\n  \"enforceMinimum\": true,\n  \"enforceMaximum\": true,\n  \"created\": \"2024-01-01T00:00:00\",\n  \"expiry\": \"2025-01-01T00:00:00\",\n  \"extensionDays\": 7,\n  \"finalDays\": 45,\n  \"indicativeFinalYield\": 5.5,\n  \"minExtensions\": 7,\n  \"minimum\": 10,\n  \"nbPenaltyExtensions\": 7,\n  \"optionDate\": \"2025-01-01\",\n  \"productCode\": \"GBP-BACR[GC]-3M\",\n  \"sector\": \"Financial\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92debb5a-679c-4c0b-ad93-c5d0956043b7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityCode\": \"TEST0001\",\n  \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n  \"amount\": 1000,\n  \"maturityAction\": \"Roll\",\n  \"source\": \"As per Master Subscription Agreement\",\n  \"subscriptionDate\": \"2024-01-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ccbd6711-65cc-446d-9704-5b64d20f6f1c",
+    "name": "TreasurySpring Public Calendar Subscriptions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

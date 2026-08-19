@@ -1,0 +1,368 @@
+{
+  "item": [
+    {
+      "id": "ff4f89b7-9de8-4d6f-a293-e52bf8ca9c82",
+      "name": "Indications",
+      "description": {
+        "content": "Get information about Indications",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ff769f91-da1b-479f-9179-8e69a5aa4b12",
+          "name": "Get a list of all indications",
+          "request": {
+            "name": "Get a list of all indications",
+            "description": {
+              "content": "Retrieves a list of all Indications that the user has permission to view.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "indication",
+                ":code"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "code",
+                  "description": "(Required) Entity code"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "315a0f4f-029f-4f54-9763-b34b6a849be3",
+              "name": "List of indications",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "indication",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n    \"type\": \"Fixed\",\n    \"currency\": \"GBP\",\n    \"issueDate\": \"2024-01-01\",\n    \"subscriptionDates\": [\n      \"2024-01-01\"\n    ],\n    \"cutoffTime\": \"12:15:00\",\n    \"maturityDate\": \"2025-01-01\",\n    \"indicativeYield\": 5.5,\n    \"maximum\": 100,\n    \"cellCode\": \"Example-IC\",\n    \"obligorExposureCode\": \"BACR\",\n    \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n    \"enabled\": true,\n    \"term\": \"3m\",\n    \"restricted\": false,\n    \"calendars\": [\n      \"TreasurySpring\",\n      \"United Kingdom\"\n    ],\n    \"enforceMinimum\": true,\n    \"enforceMaximum\": true,\n    \"created\": \"2024-01-01T00:00:00\",\n    \"expiry\": \"2025-01-01T00:00:00\",\n    \"extensionDays\": 7,\n    \"finalDays\": 45,\n    \"indicativeFinalYield\": 5.5,\n    \"minExtensions\": 7,\n    \"minimum\": 10,\n    \"nbPenaltyExtensions\": 7,\n    \"optionDate\": \"2025-01-01\",\n    \"productCode\": \"GBP-BACR[GC]-3M\",\n    \"sector\": \"Financial\"\n  },\n  {\n    \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n    \"type\": \"Fixed\",\n    \"currency\": \"GBP\",\n    \"issueDate\": \"2024-01-01\",\n    \"subscriptionDates\": [\n      \"2024-01-01\"\n    ],\n    \"cutoffTime\": \"12:15:00\",\n    \"maturityDate\": \"2025-01-01\",\n    \"indicativeYield\": 5.5,\n    \"maximum\": 100,\n    \"cellCode\": \"Example-IC\",\n    \"obligorExposureCode\": \"BACR\",\n    \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n    \"enabled\": true,\n    \"term\": \"3m\",\n    \"restricted\": false,\n    \"calendars\": [\n      \"TreasurySpring\",\n      \"United Kingdom\"\n    ],\n    \"enforceMinimum\": true,\n    \"enforceMaximum\": true,\n    \"created\": \"2024-01-01T00:00:00\",\n    \"expiry\": \"2025-01-01T00:00:00\",\n    \"extensionDays\": 7,\n    \"finalDays\": 45,\n    \"indicativeFinalYield\": 5.5,\n    \"minExtensions\": 7,\n    \"minimum\": 10,\n    \"nbPenaltyExtensions\": 7,\n    \"optionDate\": \"2025-01-01\",\n    \"productCode\": \"GBP-BACR[GC]-3M\",\n    \"sector\": \"Financial\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9349a94b-720d-4846-8ba4-e86bc1ea633f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "indication",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e28c9449-4306-491e-a4c6-02d3eb7f3c33",
+          "name": "Get a single indication by id",
+          "request": {
+            "name": "Get a single indication by id",
+            "description": {
+              "content": "Retrieves a single Indication if the user has permission to view it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "indication",
+                ":code",
+                ":uid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "code",
+                  "description": "(Required) Entity code"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uid",
+                  "description": "(Required) Indication uid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7b219921-14b1-4c83-9039-9412d921a249",
+              "name": "Indication information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "indication",
+                    ":code",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Indication uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uid\": \"8ca8f50d3ef44a43962998a5533f0cfa\",\n  \"type\": \"Fixed\",\n  \"currency\": \"GBP\",\n  \"issueDate\": \"2024-01-01\",\n  \"subscriptionDates\": [\n    \"2024-01-01\"\n  ],\n  \"cutoffTime\": \"12:15:00\",\n  \"maturityDate\": \"2025-01-01\",\n  \"indicativeYield\": 5.5,\n  \"maximum\": 100,\n  \"cellCode\": \"Example-IC\",\n  \"obligorExposureCode\": \"BACR\",\n  \"obligorExposureName\": \"Barclays Bank Plc [Gov secured]\",\n  \"enabled\": true,\n  \"term\": \"3m\",\n  \"restricted\": false,\n  \"calendars\": [\n    \"TreasurySpring\",\n    \"United Kingdom\"\n  ],\n  \"enforceMinimum\": true,\n  \"enforceMaximum\": true,\n  \"created\": \"2024-01-01T00:00:00\",\n  \"expiry\": \"2025-01-01T00:00:00\",\n  \"extensionDays\": 7,\n  \"finalDays\": 45,\n  \"indicativeFinalYield\": 5.5,\n  \"minExtensions\": 7,\n  \"minimum\": 10,\n  \"nbPenaltyExtensions\": 7,\n  \"optionDate\": \"2025-01-01\",\n  \"productCode\": \"GBP-BACR[GC]-3M\",\n  \"sector\": \"Financial\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "31393547-aa83-456c-9d21-72714f36bb50",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "indication",
+                    ":code",
+                    ":uid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "uid",
+                      "description": "(Required) Indication uid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c1d3ffed-06b2-4e2e-a685-4181807f2cf6",
+    "name": "TreasurySpring Public Calendar Indications API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TreasurySpring Public Calendar Events API",
+    "version": "v0.7.3"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.treasuryspring.com/api/v1/event",
+            "params": [
+              {
+                "name": "start_cursor",
+                "value": "",
+                "type": "query",
+                "description": "Return events after this cursor (exclusive)"
+              },
+              {
+                "name": "end_cursor",
+                "value": "",
+                "type": "query",
+                "description": "Return events up to and including this cursor"
+              },
+              {
+                "name": "min_created_at",
+                "value": "",
+                "type": "query",
+                "description": "Return events created after this timestamp. ISO 8601 datetime in any timezone. When using a timezone offset, percent-encode the + as %2B (e.g. %2B01:00), or use the Z suffix for UTC."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max events to return"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return a page of events from the stream.\n\nSupports cursor-based pagination with an optional timestamp lower bound."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

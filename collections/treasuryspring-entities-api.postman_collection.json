@@ -1,0 +1,433 @@
+{
+  "item": [
+    {
+      "id": "232c4b2b-d88b-4fae-8146-eca8927cf2fa",
+      "name": "Entities",
+      "description": {
+        "content": "Get information about Entities",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cc0ebafb-91d9-4cc8-9c68-52fab09be30e",
+          "name": "Get a list of all entities",
+          "request": {
+            "name": "Get a list of all entities",
+            "description": {
+              "content": "Retrieves a list of all entities that the user has permission to view.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "79435752-93ed-4610-bfb0-789bd7723a29",
+              "name": "List of entities",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"code\": \"TEST0001\",\n    \"name\": \"TreasurySpring Limited\",\n    \"status\": \"ACTIVE\",\n    \"type\": \"string\",\n    \"onboarding\": false,\n    \"currency\": \"GBP\",\n    \"bankAccounts\": [\n      {\n        \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n        \"currency\": \"GBP\",\n        \"lastDigits\": \"1234\"\n      },\n      {\n        \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n        \"currency\": \"GBP\",\n        \"lastDigits\": \"1234\"\n      }\n    ],\n    \"accountManager\": {\n      \"email\": \"example@treasuryspring.com\",\n      \"name\": \"example\",\n      \"phone\": \"string\"\n    },\n    \"address\": \"string\",\n    \"countryCode\": \"GB\"\n  },\n  {\n    \"code\": \"TEST0001\",\n    \"name\": \"TreasurySpring Limited\",\n    \"status\": \"ACTIVE\",\n    \"type\": \"string\",\n    \"onboarding\": true,\n    \"currency\": \"GBP\",\n    \"bankAccounts\": [\n      {\n        \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n        \"currency\": \"GBP\",\n        \"lastDigits\": \"1234\"\n      },\n      {\n        \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n        \"currency\": \"GBP\",\n        \"lastDigits\": \"1234\"\n      }\n    ],\n    \"accountManager\": {\n      \"email\": \"example@treasuryspring.com\",\n      \"name\": \"example\",\n      \"phone\": \"string\"\n    },\n    \"address\": \"string\",\n    \"countryCode\": \"GB\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "643be20b-8425-4f8d-b3bc-cffdd76f4043",
+          "name": "Get a single entity by entity code",
+          "request": {
+            "name": "Get a single entity by entity code",
+            "description": {
+              "content": "Retrieves data for a single Entity if the user has permission to view it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entity",
+                ":code"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "code",
+                  "description": "(Required) Entity code"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8cbaba37-5c00-43cd-928d-d746eeefea13",
+              "name": "Entity information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entity",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"TEST0001\",\n  \"name\": \"TreasurySpring Limited\",\n  \"status\": \"ACTIVE\",\n  \"type\": \"string\",\n  \"onboarding\": false,\n  \"currency\": \"GBP\",\n  \"bankAccounts\": [\n    {\n      \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n      \"currency\": \"GBP\",\n      \"lastDigits\": \"1234\"\n    },\n    {\n      \"uid\": \"3e3020d02361470fa5839b2a456102b7\",\n      \"currency\": \"GBP\",\n      \"lastDigits\": \"1234\"\n    }\n  ],\n  \"accountManager\": {\n    \"email\": \"example@treasuryspring.com\",\n    \"name\": \"example\",\n    \"phone\": \"string\"\n  },\n  \"address\": \"string\",\n  \"countryCode\": \"GB\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d2060df2-aec6-47f4-99c6-00eb377ca857",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entity",
+                    ":code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0610ab47-7813-4c72-add0-5348fb1725e3",
+          "name": "List all users and permissions for an entity",
+          "request": {
+            "name": "List all users and permissions for an entity",
+            "description": {
+              "content": "Retrieves a list of all users who have access to an entity and the permissions they have.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entity",
+                ":code",
+                "permissions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "code",
+                  "description": "(Required) Entity code"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ec46122b-9e54-422f-8918-ea642446ceea",
+              "name": "List of users and associated permissions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entity",
+                    ":code",
+                    "permissions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"user\": \"example@treasuryspring.com\",\n    \"permissions\": [\n      \"view:holdings\",\n      \"view:profile\"\n    ],\n    \"status\": \"Active\"\n  },\n  {\n    \"user\": \"example@treasuryspring.com\",\n    \"permissions\": [\n      \"view:holdings\",\n      \"view:profile\"\n    ],\n    \"status\": \"Active\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "016ed3e4-da6a-40b3-80b7-a064db3559d7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entity",
+                    ":code",
+                    "permissions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "code",
+                      "description": "(Required) Entity code"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "fdda8c22-60b9-4256-b24d-9dde1c4636a0",
+    "name": "TreasurySpring Public Calendar Entities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}

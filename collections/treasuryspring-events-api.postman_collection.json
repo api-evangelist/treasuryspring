@@ -1,0 +1,220 @@
+{
+  "item": [
+    {
+      "id": "258c6dea-bb81-409e-8f76-ac9062c332e1",
+      "name": "Events",
+      "description": {
+        "content": "Stream of normalised events for integration and reconciliation",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9247a573-738f-4b78-ace4-6a5ca0672d57",
+          "name": "Get a list of events",
+          "request": {
+            "name": "Get a list of events",
+            "description": {
+              "content": "Return a page of events from the stream.\n\nSupports cursor-based pagination with an optional timestamp lower bound.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "event"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_cursor",
+                  "value": "<string,null>",
+                  "description": "Return events after this cursor (exclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_cursor",
+                  "value": "<string,null>",
+                  "description": "Return events up to and including this cursor"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_created_at",
+                  "value": "<string,null-date-time>",
+                  "description": "Return events created after this timestamp. ISO 8601 datetime in any timezone. When using a timezone offset, percent-encode the + as %2B (e.g. %2B01:00), or use the Z suffix for UTC."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "1000",
+                  "description": "Max events to return"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a25ef4ec-f719-416c-be3c-f1e51d16869f",
+              "name": "Event stream with pagination",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_cursor",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "end_cursor",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_created_at",
+                      "value": "2024-01-01T00:00:00"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"events\": [\n    {\n      \"uid\": \"00000000000000000000000000000001\",\n      \"cursor\": \"ev1.abc123.xyz789\",\n      \"entityCode\": \"TEST001\",\n      \"obligorExposureCode\": \"BACR\",\n      \"maturityValue\": \"10250.00\",\n      \"yield\": \"4.000000\",\n      \"eventType\": \"string\",\n      \"currency\": \"GBP\",\n      \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\",\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"cost\": \"10000.00\",\n      \"subscriptionDate\": \"2024-01-01\",\n      \"maturityDate\": \"2025-01-01\"\n    },\n    {\n      \"uid\": \"00000000000000000000000000000001\",\n      \"cursor\": \"ev1.abc123.xyz789\",\n      \"entityCode\": \"TEST001\",\n      \"obligorExposureCode\": \"BACR\",\n      \"maturityValue\": \"10250.00\",\n      \"yield\": \"4.000000\",\n      \"eventType\": \"string\",\n      \"currency\": \"GBP\",\n      \"holdingUid\": \"6e69e21342a24bbdaf9fe4e8a9995fda\",\n      \"subscriptionUid\": \"dade0389c66241bd8366b017f1ffe19a\",\n      \"productCode\": \"GBP-BACR[GC]-3M\",\n      \"cost\": \"10000.00\",\n      \"subscriptionDate\": \"2024-01-01\",\n      \"maturityDate\": \"2025-01-01\"\n    }\n  ],\n  \"pageInfo\": {\n    \"hasNextPage\": false,\n    \"limit\": 1000,\n    \"endCursor\": \"ev1.abc123.xyz789\",\n    \"pageEndCursor\": \"ev1.abc123.xyz789\",\n    \"startCursor\": \"ev1.abc123.xyz789\",\n    \"totalCount\": 42\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "147c5dca-eb27-4fb9-9061-9704fa44a3bb",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_cursor",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "end_cursor",
+                      "value": "<string,null>"
+                    },
+                    {
+                      "key": "min_created_at",
+                      "value": "2024-01-01T00:00:00"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.treasuryspring.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d53da0d3-0484-4ba8-a312-669f5f0d084a",
+    "name": "TreasurySpring Public Calendar Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.\n\nContact Support:\n Name: API Support\n Email: api-support@treasuryspring.com",
+      "type": "text/plain"
+    }
+  }
+}
