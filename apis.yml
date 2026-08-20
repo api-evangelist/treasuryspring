@@ -39,6 +39,16 @@ tags:
 - Cash Management
 - Treasury
 - Investments
+- Financial-Services
+- Fixed Term Funds
+- Payments
+- MCP
+tags_raw:
+- Company
+- Fintech
+- Cash Management
+- Treasury
+- Investments
 - Financial Services
 - Fixed Term Funds
 - Payments
@@ -147,6 +157,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -161,6 +173,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Health Check
+  tags_raw:
   - Healthcheck
   properties:
   - type: OpenAPI
@@ -207,6 +221,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -235,6 +251,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -249,6 +267,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -263,6 +283,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
