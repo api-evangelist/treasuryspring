@@ -9,6 +9,18 @@ description: >-
   holdings, tasks and a normalised event stream — the full FTF lifecycle from
   subscription to live holding — with OAuth 2.0 auth, offset and cursor pagination,
   webhooks, and a published, read-only Model Context Protocol (MCP) server for AI agents.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
