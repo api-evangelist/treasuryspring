@@ -185,7 +185,7 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
-  - Health Check
+  - Healthcheck
   tags_raw:
   - Healthcheck
   properties:
