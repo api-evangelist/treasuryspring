@@ -273,6 +273,22 @@ apis:
     url: https://docs.treasuryspring.com/
   - type: APIReference
     url: https://docs.treasuryspring.com/api-reference
+- aid: treasuryspring:treasuryspring-oauth-api
+  name: TreasurySpring O Auth API
+  description: >-
+    OAuth 2.0 endpoint to exchange your Client Credentials for a token. This token can then be used to
+    access the API.
+  humanURL: https://docs.treasuryspring.com/
+  baseURL: https://api.treasuryspring.com/api/v1
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/treasuryspring-oauth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.treasuryspring.com/
+  - type: APIReference
+    url: https://docs.treasuryspring.com/api-reference
 - aid: treasuryspring:treasuryspring-health-check-api
   name: TreasurySpring Health Check API
   description: Check the status of the API
@@ -283,22 +299,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/treasuryspring-health-check-api-openapi.yml
-  - type: Documentation
-    url: https://docs.treasuryspring.com/
-  - type: APIReference
-    url: https://docs.treasuryspring.com/api-reference
-- aid: treasuryspring:treasuryspring-o-auth-api
-  name: TreasurySpring O Auth API
-  description: >-
-    OAuth 2.0 endpoint to exchange your Client Credentials for a token. This token can then be used to
-    access the API.
-  humanURL: https://docs.treasuryspring.com/
-  baseURL: https://api.treasuryspring.com/api/v1
-  tags:
-  - O Auth
-  properties:
-  - type: OpenAPI
-    url: openapi/treasuryspring-o-auth-api-openapi.yml
   - type: Documentation
     url: https://docs.treasuryspring.com/
   - type: APIReference
