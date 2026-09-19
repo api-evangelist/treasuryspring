@@ -52,7 +52,7 @@ tags:
 - Fintech
 - Cash Management
 - Treasury
-- Investments
+- Investment
 - Financial-Services
 - Fixed Term Funds
 - Payments
@@ -281,6 +281,8 @@ apis:
   humanURL: https://docs.treasuryspring.com/
   baseURL: https://api.treasuryspring.com/api/v1
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
