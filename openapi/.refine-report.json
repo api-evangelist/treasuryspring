@@ -1,19 +1,7 @@
 {
   "provider": "treasuryspring",
   "sources": [
-    "treasuryspring-calendar-api-openapi.yml",
-    "treasuryspring-cells-api-openapi.yml",
-    "treasuryspring-entities-api-openapi.yml",
-    "treasuryspring-event-checkpoints-api-openapi.yml",
-    "treasuryspring-events-api-openapi.yml",
-    "treasuryspring-healthcheck-api-openapi.yml",
-    "treasuryspring-holdings-api-openapi.yml",
-    "treasuryspring-indications-api-openapi.yml",
-    "treasuryspring-oauth-api-openapi.yml",
-    "treasuryspring-obligor-exposure-api-openapi.yml",
-    "treasuryspring-subscriptions-api-openapi.yml",
-    "treasuryspring-tasks-api-openapi.yml",
-    "treasuryspring-webhooks-api-openapi.yml"
+    "_original/treasuryspring-openapi-original.json"
   ],
   "outputs": [
     "treasuryspring-calendar-api-openapi.yml",
@@ -30,9 +18,30 @@
     "treasuryspring-tasks-api-openapi.yml",
     "treasuryspring-webhooks-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 2 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "treasuryspring-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: treasuryspring-health-check-api-openapi.yml, treasuryspring-o-auth-api-openapi.yml",
+    "apis.yml register: written (+2 apis, 13 total)"
+  ],
+  "skipped": [
+    "treasuryspring-calendar-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-cells-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-entities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-event-checkpoints-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-health-check-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-holdings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-indications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-o-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-obligor-exposure-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "treasuryspring-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: api-support@treasuryspring.com
@@ -6,7 +6,7 @@ info:
     url: https://treasuryspring.com/
   description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
   summary: '**REST API for integration with TreasurySpring**'
-  title: TreasurySpring Public Calendar Healthcheck API
+  title: TreasurySpring Public Healthcheck API
   version: v0.7.3
   x-logo:
     altText: TreasurySpring logo
@@ -18,7 +18,7 @@ servers:
   url: https://api.sandbox.treasuryspring.com/api/v1
 tags:
 - description: Check the status of the API
-  name: Healthcheck
+  name: Health Check
 paths:
   /health:
     get:
@@ -35,7 +35,7 @@ paths:
       - bearerAuth: []
       summary: Perform a Health Check
       tags:
-      - Healthcheck
+      - Health Check
       x-codeSamples:
       - label: Curl
         lang: Curl

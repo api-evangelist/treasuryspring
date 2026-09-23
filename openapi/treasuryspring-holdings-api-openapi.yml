@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: api-support@treasuryspring.com
@@ -6,7 +6,7 @@ info:
     url: https://treasuryspring.com/
   description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
   summary: '**REST API for integration with TreasurySpring**'
-  title: TreasurySpring Public Calendar Holdings API
+  title: TreasurySpring Public Holdings API
   version: v0.7.3
   x-logo:
     altText: TreasurySpring logo
@@ -381,6 +381,196 @@ paths:
         source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/holding/TEST0001/9r8e6g4ab8744fe24f8r511cbebda7f1/maturity-action' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"reason\": \"Funds returning shortly\",\n        \"action\": \"HOLD\"\n    }'\n"
 components:
   schemas:
+    HoldingStatusEnum:
+      enum:
+      - Cash
+      - Pending
+      - PendingWithdrawal
+      - Issued
+      - Redeemed
+      - Cancelled
+      - CutOff
+      - Processing
+      type: string
+      x-tags:
+      - Holdings
+    PaginatedExtensions:
+      description: PaginatedExtensions schema.
+      properties:
+        extensions:
+          items:
+            $ref: '#/components/schemas/Extension'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+      required:
+      - pageInfo
+      - extensions
+      type: object
+      x-tags:
+      - Holdings
+    PaginatedHoldings:
+      description: PaginatedHoldings schema.
+      properties:
+        holdings:
+          items:
+            $ref: '#/components/schemas/Holding'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        valueDate:
+          description: Date of the response (London timezone)
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+      required:
+      - pageInfo
+      - holdings
+      - valueDate
+      type: object
+      x-tags:
+      - Holdings
+    UpdateMaturityActionResponse:
+      description: UpdateMaturityActionResponse schema.
+      properties:
+        entityCode:
+          description: Entity Code
+          examples:
+          - TEST0001
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 16cdb3fe25e743fc9eed4b9742869424
+          type: string
+        maturityActions:
+          description: List of maturity actions
+          items:
+            $ref: '#/components/schemas/MaturityAction'
+          type: array
+      required:
+      - entityCode
+      - holdingUid
+      - maturityActions
+      type: object
+      x-tags:
+      - Holdings
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    UpdateMaturityActionBody:
+      description: UpdateMaturityActionBody schema.
+      properties:
+        action:
+          $ref: '#/components/schemas/MaturityActionEnum'
+          description: The maturity action to change to
+          examples:
+          - ROLL
+        indicationUid:
+          description: The uid of indication to switch to (Required if action is set to SWITCH)
+          examples:
+          - f952ed5df4g84f8gh148f4f8sf6g4
+          type:
+          - string
+          - 'null'
+        reason:
+          anyOf:
+          - $ref: '#/components/schemas/ReasonEnum'
+          - type: 'null'
+          description: Reason for redemption if choosing to redeem cash
+          examples:
+          - Need proceeds
+      required:
+      - action
+      type: object
+      x-tags:
+      - Holdings
+    MaturityActionEnum:
+      enum:
+      - ROLL
+      - SWITCH
+      - HOLD
+      - REDEEM
+      type: string
+      x-tags:
+      - Holdings
+    MaturityAction:
+      description: MaturityAction schema.
+      properties:
+        amount:
+          description: Amount
+          examples:
+          - 5000
+          type: number
+        currency:
+          description: Currency
+          examples:
+          - GBP
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 74628ebad0f54881b3c76acf146eb3c3
+          type: string
+        subscriptionUid:
+          description: The unique identifier for the subscription associated with the maturity action, if any.
+          examples:
+          - dade0389c66241bd8366b017f1ffe19a
+          type:
+          - string
+          - 'null'
+        type:
+          description: Maturity Action type
+          examples:
+          - ROLL
+          type: string
+        uid:
+          description: Maturity Action uid
+          examples:
+          - 96cd54e5ddfd41b0a77afef15a96660d
+          type: string
+      required:
+      - uid
+      - type
+      - amount
+      - currency
+      - holdingUid
+      type: object
+      x-tags:
+      - Holdings
+    ReasonEnum:
+      enum:
+      - Funds returning shortly
+      - Better terms elsewhere
+      - Receipt of interest payment
+      - Switching FTF product
+      - Treasury Operations changed
+      - Need proceeds
+      type: string
+      x-tags:
+      - Tasks
     PageInfo:
       description: PageInfo schema.
       properties:
@@ -426,86 +616,49 @@ components:
       - offset
       - totalCount
       type: object
-    HoldingStatusEnum:
-      enum:
-      - Cash
-      - Pending
-      - PendingWithdrawal
-      - Issued
-      - Redeemed
-      - Cancelled
-      - CutOff
-      - Processing
-      type: string
-      x-tags:
-      - Holdings
-    UpdateMaturityActionBody:
-      description: UpdateMaturityActionBody schema.
+    Extension:
+      description: Extension schema — one historical extension of an extendable holding.
       properties:
-        action:
-          $ref: '#/components/schemas/MaturityActionEnum'
-          description: The maturity action to change to
+        date:
+          description: Date the extension took effect
           examples:
-          - ROLL
-        indicationUid:
-          description: The uid of indication to switch to (Required if action is set to SWITCH)
+          - '2024-01-01'
+          format: date
+          type: string
+        finalYield:
+          description: Final period yield, annualised APY (set on the final extension only).
           examples:
-          - f952ed5df4g84f8gh148f4f8sf6g4
+          - 5
           type:
-          - string
+          - number
           - 'null'
-        reason:
-          anyOf:
-          - $ref: '#/components/schemas/ReasonEnum'
-          - type: 'null'
-          description: Reason for redemption if choosing to redeem cash
+        maturity:
+          description: Maturity date set by this extension
           examples:
-          - Need proceeds
-      required:
-      - action
-      type: object
-      x-tags:
-      - Holdings
-    ReasonEnum:
-      enum:
-      - Funds returning shortly
-      - Better terms elsewhere
-      - Receipt of interest payment
-      - Switching FTF product
-      - Treasury Operations changed
-      - Need proceeds
-      type: string
-      x-tags:
-      - Tasks
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
+          - '2024-02-01'
+          format: date
           type: string
-        type:
+        pricePerShare:
+          description: Price per share at the extension
+          examples:
+          - 1.05
+          type: number
+        uid:
+          description: Extension uid
+          examples:
+          - bcee2bb8569d406c9251dcc9bee38aff
           type: string
+        yield:
+          description: Yield for this extension period (annualised APY).
+          examples:
+          - 5
+          type: number
       required:
-      - loc
-      - msg
-      - type
-      type: object
-    PaginatedExtensions:
-      description: PaginatedExtensions schema.
-      properties:
-        extensions:
-          items:
-            $ref: '#/components/schemas/Extension'
-          type: array
-        pageInfo:
-          $ref: '#/components/schemas/PageInfo'
-      required:
-      - pageInfo
-      - extensions
+      - uid
+      - date
+      - maturity
+      - yield
+      - pricePerShare
       type: object
       x-tags:
       - Holdings
@@ -523,50 +676,6 @@ components:
       required:
       - holding
       - valueDate
-      type: object
-      x-tags:
-      - Holdings
-    MaturityAction:
-      description: MaturityAction schema.
-      properties:
-        amount:
-          description: Amount
-          examples:
-          - 5000
-          type: number
-        currency:
-          description: Currency
-          examples:
-          - GBP
-          type: string
-        holdingUid:
-          description: Holding uid
-          examples:
-          - 74628ebad0f54881b3c76acf146eb3c3
-          type: string
-        subscriptionUid:
-          description: The unique identifier for the subscription associated with the maturity action, if any.
-          examples:
-          - dade0389c66241bd8366b017f1ffe19a
-          type:
-          - string
-          - 'null'
-        type:
-          description: Maturity Action type
-          examples:
-          - ROLL
-          type: string
-        uid:
-          description: Maturity Action uid
-          examples:
-          - 96cd54e5ddfd41b0a77afef15a96660d
-          type: string
-      required:
-      - uid
-      - type
-      - amount
-      - currency
-      - holdingUid
       type: object
       x-tags:
       - Holdings
@@ -770,93 +879,6 @@ components:
       type: object
       x-tags:
       - Indications
-    Extension:
-      description: Extension schema — one historical extension of an extendable holding.
-      properties:
-        date:
-          description: Date the extension took effect
-          examples:
-          - '2024-01-01'
-          format: date
-          type: string
-        finalYield:
-          description: Final period yield, annualised APY (set on the final extension only).
-          examples:
-          - 5
-          type:
-          - number
-          - 'null'
-        maturity:
-          description: Maturity date set by this extension
-          examples:
-          - '2024-02-01'
-          format: date
-          type: string
-        pricePerShare:
-          description: Price per share at the extension
-          examples:
-          - 1.05
-          type: number
-        uid:
-          description: Extension uid
-          examples:
-          - bcee2bb8569d406c9251dcc9bee38aff
-          type: string
-        yield:
-          description: Yield for this extension period (annualised APY).
-          examples:
-          - 5
-          type: number
-      required:
-      - uid
-      - date
-      - maturity
-      - yield
-      - pricePerShare
-      type: object
-      x-tags:
-      - Holdings
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
-    MaturityActionEnum:
-      enum:
-      - ROLL
-      - SWITCH
-      - HOLD
-      - REDEEM
-      type: string
-      x-tags:
-      - Holdings
-    UpdateMaturityActionResponse:
-      description: UpdateMaturityActionResponse schema.
-      properties:
-        entityCode:
-          description: Entity Code
-          examples:
-          - TEST0001
-          type: string
-        holdingUid:
-          description: Holding uid
-          examples:
-          - 16cdb3fe25e743fc9eed4b9742869424
-          type: string
-        maturityActions:
-          description: List of maturity actions
-          items:
-            $ref: '#/components/schemas/MaturityAction'
-          type: array
-      required:
-      - entityCode
-      - holdingUid
-      - maturityActions
-      type: object
-      x-tags:
-      - Holdings
     Holding:
       description: Holding schema.
       properties:
@@ -1078,28 +1100,6 @@ components:
       - maturityDate
       - calendars
       - isOnBalanceSheet
-      type: object
-      x-tags:
-      - Holdings
-    PaginatedHoldings:
-      description: PaginatedHoldings schema.
-      properties:
-        holdings:
-          items:
-            $ref: '#/components/schemas/Holding'
-          type: array
-        pageInfo:
-          $ref: '#/components/schemas/PageInfo'
-        valueDate:
-          description: Date of the response (London timezone)
-          examples:
-          - '2025-01-01'
-          format: date
-          type: string
-      required:
-      - pageInfo
-      - holdings
-      - valueDate
       type: object
       x-tags:
       - Holdings

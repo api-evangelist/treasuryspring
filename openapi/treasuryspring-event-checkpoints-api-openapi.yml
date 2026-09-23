@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: api-support@treasuryspring.com
@@ -6,7 +6,7 @@ info:
     url: https://treasuryspring.com/
   description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
   summary: '**REST API for integration with TreasurySpring**'
-  title: TreasurySpring Public Calendar Event Checkpoints API
+  title: TreasurySpring Public Event Checkpoints API
   version: v0.7.3
   x-logo:
     altText: TreasurySpring logo
@@ -17,31 +17,7 @@ servers:
 - description: Sandbox Server
   url: https://api.sandbox.treasuryspring.com/api/v1
 tags:
-- description: 'Server-managed cursors for stateless event stream consumers.
-
-
-    In most cases, checkpoints are not needed. If your system can persist data locally (e.g. in a database, file, or key-value store), store the `cursor` value from `GET /event` yourself and pass it as `start_cursor` on the next request.
-
-
-    **When to use checkpoints:**
-
-
-    Use this endpoint if your system runs in an environment that cannot reliably persist state between invocations — for example, a stateless function, a script with no backing store, or a system that delegates position tracking to TreasurySpring entirely.
-
-
-    A checkpoint is a named record stored server-side that remembers where your last successful sync run ended. Instead of storing the cursor yourself, you store it here and retrieve it at the start of each sync run:
-
-
-    1. **Create** a checkpoint once: `PUT /event/checkpoint/{name}` — the cursor is initialised to the current end of the event stream.
-
-    2. **Read** the checkpoint at the start of each sync run: `GET /event/checkpoint/{name}` → `cursor`, `checkpointVersion`.
-
-    3. **Fetch events** from that cursor: `GET /event?start_cursor={cursor}`.
-
-    4. **Advance** the checkpoint after successful processing: `PATCH /event/checkpoint/{name}` with `expectedCheckpointVersion` and `newCursor`. The `checkpointVersion` acts as a safety check — if another process has already advanced the checkpoint since you last read it, the request returns a 409 Conflict with the current state so you can reconcile before retrying.
-
-
-    Checkpoints are scoped to the authenticated API user.'
+- description: Server-managed cursors for stateless event stream consumers.
   name: Event Checkpoints
 paths:
   /event/checkpoint:
@@ -226,60 +202,16 @@ paths:
         source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"initial_cursor\": \"ev1.abc123.xyz789\"\n    }'\n"
 components:
   schemas:
-    PatchCheckpointResponse:
+    DeleteCheckpointResponse:
       properties:
         checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
-      type: object
-      x-tags:
-      - Event Checkpoints
-    UpsertCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-        created:
-          description: True if the checkpoint was newly created, False if it already existed
+          $ref: '#/components/schemas/CheckpointRef'
+        deleted:
+          description: Always True on success
           type: boolean
       required:
       - checkpoint
-      - created
-      type: object
-      x-tags:
-      - Event Checkpoints
-    GetCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
-      type: object
-      x-tags:
-      - Event Checkpoints
-    CheckpointRef:
-      properties:
-        name:
-          description: Name of the checkpoint
-          type: string
-        uid:
-          description: Unique identifier of the checkpoint
-          type: string
-      required:
-      - uid
-      - name
-      type: object
-      x-tags:
-      - Event Checkpoints
-    PutCheckpointBody:
-      properties:
-        initial_cursor:
-          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
-          examples:
-          - ev1....
-          type:
-          - string
-          - 'null'
+      - deleted
       type: object
       x-tags:
       - Event Checkpoints
@@ -319,17 +251,6 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    ListCheckpointsResponse:
-      properties:
-        checkpoints:
-          items:
-            $ref: '#/components/schemas/CheckpointData'
-          type: array
-      required:
-      - checkpoints
-      type: object
-      x-tags:
-      - Event Checkpoints
     PatchCheckpointBody:
       properties:
         expected_checkpoint_version:
@@ -349,16 +270,71 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    DeleteCheckpointResponse:
+    UpsertCheckpointResponse:
       properties:
         checkpoint:
-          $ref: '#/components/schemas/CheckpointRef'
-        deleted:
-          description: Always True on success
+          $ref: '#/components/schemas/CheckpointData'
+        created:
+          description: True if the checkpoint was newly created, False if it already existed
           type: boolean
       required:
       - checkpoint
-      - deleted
+      - created
+      type: object
+      x-tags:
+      - Event Checkpoints
+    GetCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    CheckpointRef:
+      properties:
+        name:
+          description: Name of the checkpoint
+          type: string
+        uid:
+          description: Unique identifier of the checkpoint
+          type: string
+      required:
+      - uid
+      - name
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PatchCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    ListCheckpointsResponse:
+      properties:
+        checkpoints:
+          items:
+            $ref: '#/components/schemas/CheckpointData'
+          type: array
+      required:
+      - checkpoints
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PutCheckpointBody:
+      properties:
+        initial_cursor:
+          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
+          examples:
+          - ev1....
+          type:
+          - string
+          - 'null'
       type: object
       x-tags:
       - Event Checkpoints
