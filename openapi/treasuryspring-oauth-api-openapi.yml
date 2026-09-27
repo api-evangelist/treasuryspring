@@ -6,7 +6,7 @@ info:
     url: https://treasuryspring.com/
   description: TreasurySpring's Public API provides access to an authorised user's data, including holdings, entities, cells, obligor exposures, subscriptions, tasks, and more.
   summary: '**REST API for integration with TreasurySpring**'
-  title: TreasurySpring Public O Auth API
+  title: TreasurySpring Public OAuth API
   version: v0.7.3
   x-logo:
     altText: TreasurySpring logo

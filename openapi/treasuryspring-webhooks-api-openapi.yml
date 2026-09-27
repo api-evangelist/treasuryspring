@@ -71,24 +71,13 @@ paths:
         source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/webhook' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"url\": \"https://example.com\"\n    }'\n"
 components:
   schemas:
-    WebhookResponse:
+    HTTPValidationError:
       properties:
-        email:
-          description: Email
-          examples:
-          - example@treasuryspring.com
-          type: string
-        url:
-          description: Webhook URL
-          examples:
-          - https://example.com/webhook
-          type: string
-      required:
-      - email
-      - url
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
       type: object
-      x-tags:
-      - Webhooks
     DeleteWebhookResponse:
       properties:
         email:
@@ -108,6 +97,36 @@ components:
       type: object
       x-tags:
       - Webhooks
+    WebhookUrlBody:
+      properties:
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type: string
+      required:
+      - url
+      type: object
+      x-tags:
+      - Webhooks
+    WebhookResponse:
+      properties:
+        email:
+          description: Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type: string
+      required:
+      - email
+      - url
+      type: object
+      x-tags:
+      - Webhooks
     ValidationError:
       properties:
         loc:
@@ -124,25 +143,6 @@ components:
       - loc
       - msg
       - type
-      type: object
-    WebhookUrlBody:
-      properties:
-        url:
-          description: Webhook URL
-          examples:
-          - https://example.com/webhook
-          type: string
-      required:
-      - url
-      type: object
-      x-tags:
-      - Webhooks
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
       type: object
   securitySchemes:
     basicAuth:

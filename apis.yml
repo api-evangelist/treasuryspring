@@ -53,7 +53,7 @@ tags:
 - Cash Management
 - Treasury
 - Investment
-- Financial-Services
+- Financial Services
 - Fixed Term Funds
 - Payments
 - MCP
@@ -67,6 +67,7 @@ tags_raw:
 - Fixed Term Funds
 - Payments
 - MCP
+- Financial-Services
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

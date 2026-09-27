@@ -202,16 +202,26 @@ paths:
         source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"initial_cursor\": \"ev1.abc123.xyz789\"\n    }'\n"
 components:
   schemas:
-    DeleteCheckpointResponse:
+    PatchCheckpointResponse:
       properties:
         checkpoint:
-          $ref: '#/components/schemas/CheckpointRef'
-        deleted:
-          description: Always True on success
-          type: boolean
+          $ref: '#/components/schemas/CheckpointData'
       required:
       - checkpoint
-      - deleted
+      type: object
+      x-tags:
+      - Event Checkpoints
+    CheckpointRef:
+      properties:
+        name:
+          description: Name of the checkpoint
+          type: string
+        uid:
+          description: Unique identifier of the checkpoint
+          type: string
+      required:
+      - uid
+      - name
       type: object
       x-tags:
       - Event Checkpoints
@@ -251,6 +261,19 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
+    DeleteCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointRef'
+        deleted:
+          description: Always True on success
+          type: boolean
+      required:
+      - checkpoint
+      - deleted
+      type: object
+      x-tags:
+      - Event Checkpoints
     PatchCheckpointBody:
       properties:
         expected_checkpoint_version:
@@ -283,35 +306,15 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    GetCheckpointResponse:
+    PutCheckpointBody:
       properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
-      type: object
-      x-tags:
-      - Event Checkpoints
-    CheckpointRef:
-      properties:
-        name:
-          description: Name of the checkpoint
-          type: string
-        uid:
-          description: Unique identifier of the checkpoint
-          type: string
-      required:
-      - uid
-      - name
-      type: object
-      x-tags:
-      - Event Checkpoints
-    PatchCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
+        initial_cursor:
+          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
+          examples:
+          - ev1....
+          type:
+          - string
+          - 'null'
       type: object
       x-tags:
       - Event Checkpoints
@@ -326,15 +329,12 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    PutCheckpointBody:
+    GetCheckpointResponse:
       properties:
-        initial_cursor:
-          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
-          examples:
-          - ev1....
-          type:
-          - string
-          - 'null'
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
       type: object
       x-tags:
       - Event Checkpoints

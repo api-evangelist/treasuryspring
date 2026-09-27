@@ -117,34 +117,23 @@ paths:
         source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/task/eab64d0f8h9c48038ce0dk451c77hg98' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"data\": {\n            \"approved\": true\n        }\n    }'\n"
 components:
   schemas:
-    ValidationError:
+    SubmitTaskResponse:
+      description: Submit task response schema.
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      type: object
-    SubmitTaskBody:
-      description: Submit task body schema.
-      properties:
-        data:
-          additionalProperties: true
-          description: A JSON object containing the form data to be submitted for the task. The structure of the JSON object depends on the task type and can be found in the task properties.
+        error:
+          description: Error message if the task was not successfully submitted.
           examples:
-          - approved: true
-          type: object
+          - null
+          type:
+          - string
+          - 'null'
+        success:
+          description: Indicates if the task was successfully submitted or not.
+          examples:
+          - true
+          type: boolean
       required:
-      - data
+      - success
       type: object
       x-tags:
       - Tasks
@@ -190,26 +179,37 @@ components:
       type: object
       x-tags:
       - Tasks
-    SubmitTaskResponse:
-      description: Submit task response schema.
+    SubmitTaskBody:
+      description: Submit task body schema.
       properties:
-        error:
-          description: Error message if the task was not successfully submitted.
+        data:
+          additionalProperties: true
+          description: A JSON object containing the form data to be submitted for the task. The structure of the JSON object depends on the task type and can be found in the task properties.
           examples:
-          - null
-          type:
-          - string
-          - 'null'
-        success:
-          description: Indicates if the task was successfully submitted or not.
-          examples:
-          - true
-          type: boolean
+          - approved: true
+          type: object
       required:
-      - success
+      - data
       type: object
       x-tags:
       - Tasks
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

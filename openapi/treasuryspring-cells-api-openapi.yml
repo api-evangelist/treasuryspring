@@ -56,6 +56,13 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/cell/Example-IC' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
     CellDocuments:
       description: CellDocuments schema.
       properties:
@@ -69,42 +76,6 @@ components:
       type: object
       x-tags:
       - Cells
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      type: object
-    allowedObligorExposures:
-      description: allowedObligorExposures schema.
-      properties:
-        code:
-          description: Obligor Code
-          examples:
-          - BACR
-          type: string
-        name:
-          description: Obligor Name
-          examples:
-          - Barclays Bank Plc
-          type: string
-      required:
-      - code
-      - name
-      type: object
-      x-tags:
-      - Indications
     Cell:
       description: Cell schema.
       properties:
@@ -136,12 +107,41 @@ components:
       type: object
       x-tags:
       - Cells
-    HTTPValidationError:
+    allowedObligorExposures:
+      description: allowedObligorExposures schema.
       properties:
-        detail:
+        code:
+          description: Obligor Code
+          examples:
+          - BACR
+          type: string
+        name:
+          description: Obligor Name
+          examples:
+          - Barclays Bank Plc
+          type: string
+      required:
+      - code
+      - name
+      type: object
+      x-tags:
+      - Indications
+    ValidationError:
+      properties:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
       type: object
   securitySchemes:
     basicAuth:

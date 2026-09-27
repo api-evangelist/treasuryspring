@@ -101,6 +101,13 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/indication/TEST0001/8ca8f50d3ef44a43962998a5533f0cfa' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
     Indication:
       description: Indication schema.
       properties:
@@ -301,13 +308,6 @@ components:
       type: object
       x-tags:
       - Indications
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
     ValidationError:
       properties:
         loc:
