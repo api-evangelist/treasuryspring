@@ -381,26 +381,127 @@ paths:
         source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/holding/TEST0001/9r8e6g4ab8744fe24f8r511cbebda7f1/maturity-action' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"reason\": \"Funds returning shortly\",\n        \"action\": \"HOLD\"\n    }'\n"
 components:
   schemas:
-    MaturityActionEnum:
+    HoldingStatusEnum:
       enum:
-      - ROLL
-      - SWITCH
-      - HOLD
-      - REDEEM
+      - Cash
+      - Pending
+      - PendingWithdrawal
+      - Issued
+      - Redeemed
+      - Cancelled
+      - CutOff
+      - Processing
       type: string
       x-tags:
       - Holdings
-    ReasonEnum:
-      enum:
-      - Funds returning shortly
-      - Better terms elsewhere
-      - Receipt of interest payment
-      - Switching FTF product
-      - Treasury Operations changed
-      - Need proceeds
-      type: string
+    Extension:
+      description: Extension schema — one historical extension of an extendable holding.
+      properties:
+        date:
+          description: Date the extension took effect
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        finalYield:
+          description: Final period yield, annualised APY (set on the final extension only).
+          examples:
+          - 5
+          type:
+          - number
+          - 'null'
+        maturity:
+          description: Maturity date set by this extension
+          examples:
+          - '2024-02-01'
+          format: date
+          type: string
+        pricePerShare:
+          description: Price per share at the extension
+          examples:
+          - 1.05
+          type: number
+        uid:
+          description: Extension uid
+          examples:
+          - bcee2bb8569d406c9251dcc9bee38aff
+          type: string
+        yield:
+          description: Yield for this extension period (annualised APY).
+          examples:
+          - 5
+          type: number
+      required:
+      - uid
+      - date
+      - maturity
+      - yield
+      - pricePerShare
+      type: object
       x-tags:
-      - Tasks
+      - Holdings
+    PageInfo:
+      description: PageInfo schema.
+      properties:
+        hasNextPage:
+          description: Boolean indicating if there is a next page of items available
+          examples:
+          - true
+          type:
+          - boolean
+          - 'null'
+        hasPreviousPage:
+          description: boolean indicating if there is a previous page
+          examples:
+          - false
+          type:
+          - boolean
+          - 'null'
+        limit:
+          description: Limit or page size set (used for pagination)
+          examples:
+          - 100
+          type:
+          - integer
+          - 'null'
+        offset:
+          description: Offset of items (used for pagination)
+          examples:
+          - 0
+          type:
+          - integer
+          - 'null'
+        totalCount:
+          description: Total number of items available
+          examples:
+          - 200
+          type:
+          - integer
+          - 'null'
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      - limit
+      - offset
+      - totalCount
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
     UpdateMaturityActionBody:
       description: UpdateMaturityActionBody schema.
       properties:
@@ -428,18 +529,28 @@ components:
       type: object
       x-tags:
       - Holdings
-    PaginatedExtensions:
-      description: PaginatedExtensions schema.
+    UpdateMaturityActionResponse:
+      description: UpdateMaturityActionResponse schema.
       properties:
-        extensions:
+        entityCode:
+          description: Entity Code
+          examples:
+          - TEST0001
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 16cdb3fe25e743fc9eed4b9742869424
+          type: string
+        maturityActions:
+          description: List of maturity actions
           items:
-            $ref: '#/components/schemas/Extension'
+            $ref: '#/components/schemas/MaturityAction'
           type: array
-        pageInfo:
-          $ref: '#/components/schemas/PageInfo'
       required:
-      - pageInfo
-      - extensions
+      - entityCode
+      - holdingUid
+      - maturityActions
       type: object
       x-tags:
       - Holdings
@@ -460,228 +571,50 @@ components:
       type: object
       x-tags:
       - Holdings
-    PaginatedHoldings:
-      description: PaginatedHoldings schema.
+    MaturityAction:
+      description: MaturityAction schema.
       properties:
-        holdings:
-          items:
-            $ref: '#/components/schemas/Holding'
-          type: array
-        pageInfo:
-          $ref: '#/components/schemas/PageInfo'
-        valueDate:
-          description: Date of the response (London timezone)
+        amount:
+          description: Amount
           examples:
-          - '2025-01-01'
-          format: date
-          type: string
-      required:
-      - pageInfo
-      - holdings
-      - valueDate
-      type: object
-      x-tags:
-      - Holdings
-    Indication:
-      description: Indication schema.
-      properties:
-        calendars:
-          description: List of calendars followed by product
-          examples:
-          - - TreasurySpring
-            - United Kingdom
-          items:
-            type: string
-          type: array
-        cellCode:
-          description: Cell Code
-          examples:
-          - Example-IC
-          type: string
-        created:
-          description: Indication creation date (timezone aware, London time).
-          examples:
-          - '2024-01-01T00:00:00'
-          format: date-time
-          type: string
+          - 5000
+          type: number
         currency:
-          description: FTF currency
+          description: Currency
           examples:
           - GBP
           type: string
-        cutoffTime:
-          description: Time of day at which subscription cut-off occurs for this product, expressed as a naive wall-clock time in London local time (Europe/London). It is the same for every subscriptionDate. Because it carries no date, it has no UTC offset (a wall-clock time maps to a different UTC instant under GMT vs BST); to obtain the timezone-aware cut-off instant, combine it with the chosen subscriptionDate in the Europe/London timezone.
+        holdingUid:
+          description: Holding uid
           examples:
-          - '12:15:00'
-          format: time
+          - 74628ebad0f54881b3c76acf146eb3c3
           type: string
-        enabled:
-          description: Controls if the indication is enabled or set to notify me
+        subscriptionUid:
+          description: The unique identifier for the subscription associated with the maturity action, if any.
           examples:
-          - true
-          type: boolean
-        enforceMaximum:
-          description: Enforce maximum investment amount (if not enforced any subscription above maximum is subject to review)
-          examples:
-          - true
-          type: boolean
-        enforceMinimum:
-          description: Enforce minimum investment amount (if not enforced any subscription below minimum is subject to review)
-          examples:
-          - true
-          type: boolean
-        expiry:
-          description: Indication deprecated after expiring, rates subject to change (timezone aware, London time).
-          examples:
-          - '2025-01-01T00:00:00'
-          format: date-time
-          type: string
-        extensionDays:
-          description: Extension frequency (in days) (extendables only)
-          examples:
-          - 7
-          type:
-          - integer
-          - 'null'
-        finalDays:
-          description: Final period (in days) (extendables only)
-          examples:
-          - 45
-          type:
-          - integer
-          - 'null'
-        indicativeFinalYield:
-          description: Indicative final period yield, annualised APY (extendables only).
-          examples:
-          - 5.5
-          type:
-          - number
-          - 'null'
-        indicativeYield:
-          description: Indicative yield (annualised APY).
-          examples:
-          - 5.5
-          type: number
-        issueDate:
-          description: Issue date of the FTF
-          examples:
-          - '2024-01-01'
-          format: date
-          type: string
-        maturityDate:
-          description: Maturity date of the FTF
-          examples:
-          - '2025-01-01'
-          format: date
-          type: string
-        maximum:
-          description: Maximum Investment amount (in Millions)
-          examples:
-          - 100
-          type: number
-        minExtensions:
-          description: Minimum extensions to remove dropdown rate (extendables only)
-          examples:
-          - 7
-          type:
-          - integer
-          - 'null'
-        minimum:
-          description: Minimum investment amount (in Millions)
-          examples:
-          - 10
-          type:
-          - number
-          - 'null'
-        nbPenaltyExtensions:
-          description: Minimum extensions to remove penalty spread (extendables only)
-          examples:
-          - 7
-          type:
-          - integer
-          - 'null'
-        obligorExposureCode:
-          description: Obligor Exposure Code
-          examples:
-          - BACR
-          type: string
-        obligorExposureName:
-          description: Obligor Exposure Name
-          examples:
-          - Barclays Bank Plc [Gov secured]
-          type: string
-        optionDate:
-          description: Extension option date (extendables only)
-          examples:
-          - '2025-01-01'
-          format: date
+          - dade0389c66241bd8366b017f1ffe19a
           type:
           - string
           - 'null'
-        productCode:
-          description: Product Code
-          examples:
-          - GBP-BACR[GC]-3M
-          type:
-          - string
-          - 'null'
-        restricted:
-          description: Controls if the indication is restricted for a particular entity
-          examples:
-          - false
-          type: boolean
-        sector:
-          description: Product Sector
-          examples:
-          - Financial
-          type:
-          - string
-          - 'null'
-        subscriptionDates:
-          description: List of subscription dates
-          examples:
-          - - '2024-01-01'
-          items:
-            format: date
-            type: string
-          type: array
-        term:
-          description: The product term
-          examples:
-          - 3m
-          type: string
         type:
-          description: FTF type
+          description: Maturity Action type
           examples:
-          - Fixed
+          - ROLL
           type: string
         uid:
-          description: Indication uid
+          description: Maturity Action uid
           examples:
-          - 8ca8f50d3ef44a43962998a5533f0cfa
+          - 96cd54e5ddfd41b0a77afef15a96660d
           type: string
       required:
       - uid
       - type
+      - amount
       - currency
-      - issueDate
-      - subscriptionDates
-      - cutoffTime
-      - maturityDate
-      - indicativeYield
-      - maximum
-      - cellCode
-      - obligorExposureCode
-      - obligorExposureName
-      - enabled
-      - term
-      - restricted
-      - calendars
-      - enforceMinimum
-      - enforceMaximum
+      - holdingUid
       type: object
       x-tags:
-      - Indications
+      - Holdings
     Holding:
       description: Holding schema.
       properties:
@@ -906,6 +839,21 @@ components:
       type: object
       x-tags:
       - Holdings
+    PaginatedExtensions:
+      description: PaginatedExtensions schema.
+      properties:
+        extensions:
+          items:
+            $ref: '#/components/schemas/Extension'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+      required:
+      - pageInfo
+      - extensions
+      type: object
+      x-tags:
+      - Holdings
     HTTPValidationError:
       properties:
         detail:
@@ -913,196 +861,248 @@ components:
             $ref: '#/components/schemas/ValidationError'
           type: array
       type: object
-    HoldingStatusEnum:
-      enum:
-      - Cash
-      - Pending
-      - PendingWithdrawal
-      - Issued
-      - Redeemed
-      - Cancelled
-      - CutOff
-      - Processing
-      type: string
-      x-tags:
-      - Holdings
-    UpdateMaturityActionResponse:
-      description: UpdateMaturityActionResponse schema.
+    Indication:
+      description: Indication schema.
       properties:
-        entityCode:
-          description: Entity Code
+        calendars:
+          description: List of calendars followed by product
           examples:
-          - TEST0001
-          type: string
-        holdingUid:
-          description: Holding uid
-          examples:
-          - 16cdb3fe25e743fc9eed4b9742869424
-          type: string
-        maturityActions:
-          description: List of maturity actions
+          - - TreasurySpring
+            - United Kingdom
           items:
-            $ref: '#/components/schemas/MaturityAction'
+            type: string
           type: array
-      required:
-      - entityCode
-      - holdingUid
-      - maturityActions
-      type: object
-      x-tags:
-      - Holdings
-    PageInfo:
-      description: PageInfo schema.
-      properties:
-        hasNextPage:
-          description: Boolean indicating if there is a next page of items available
+        cellCode:
+          description: Cell Code
           examples:
-          - true
-          type:
-          - boolean
-          - 'null'
-        hasPreviousPage:
-          description: boolean indicating if there is a previous page
+          - Example-IC
+          type: string
+        created:
+          description: Indication creation date (timezone aware, London time).
           examples:
-          - false
-          type:
-          - boolean
-          - 'null'
-        limit:
-          description: Limit or page size set (used for pagination)
-          examples:
-          - 100
-          type:
-          - integer
-          - 'null'
-        offset:
-          description: Offset of items (used for pagination)
-          examples:
-          - 0
-          type:
-          - integer
-          - 'null'
-        totalCount:
-          description: Total number of items available
-          examples:
-          - 200
-          type:
-          - integer
-          - 'null'
-      required:
-      - hasNextPage
-      - hasPreviousPage
-      - limit
-      - offset
-      - totalCount
-      type: object
-    MaturityAction:
-      description: MaturityAction schema.
-      properties:
-        amount:
-          description: Amount
-          examples:
-          - 5000
-          type: number
+          - '2024-01-01T00:00:00'
+          format: date-time
+          type: string
         currency:
-          description: Currency
+          description: FTF currency
           examples:
           - GBP
           type: string
-        holdingUid:
-          description: Holding uid
+        cutoffTime:
+          description: Time of day at which subscription cut-off occurs for this product, expressed as a naive wall-clock time in London local time (Europe/London). It is the same for every subscriptionDate. Because it carries no date, it has no UTC offset (a wall-clock time maps to a different UTC instant under GMT vs BST); to obtain the timezone-aware cut-off instant, combine it with the chosen subscriptionDate in the Europe/London timezone.
           examples:
-          - 74628ebad0f54881b3c76acf146eb3c3
+          - '12:15:00'
+          format: time
           type: string
-        subscriptionUid:
-          description: The unique identifier for the subscription associated with the maturity action, if any.
+        enabled:
+          description: Controls if the indication is enabled or set to notify me
           examples:
-          - dade0389c66241bd8366b017f1ffe19a
+          - true
+          type: boolean
+        enforceMaximum:
+          description: Enforce maximum investment amount (if not enforced any subscription above maximum is subject to review)
+          examples:
+          - true
+          type: boolean
+        enforceMinimum:
+          description: Enforce minimum investment amount (if not enforced any subscription below minimum is subject to review)
+          examples:
+          - true
+          type: boolean
+        expiry:
+          description: Indication deprecated after expiring, rates subject to change (timezone aware, London time).
+          examples:
+          - '2025-01-01T00:00:00'
+          format: date-time
+          type: string
+        extensionDays:
+          description: Extension frequency (in days) (extendables only)
+          examples:
+          - 7
           type:
-          - string
+          - integer
           - 'null'
-        type:
-          description: Maturity Action type
+        finalDays:
+          description: Final period (in days) (extendables only)
           examples:
-          - ROLL
-          type: string
-        uid:
-          description: Maturity Action uid
+          - 45
+          type:
+          - integer
+          - 'null'
+        indicativeFinalYield:
+          description: Indicative final period yield, annualised APY (extendables only).
           examples:
-          - 96cd54e5ddfd41b0a77afef15a96660d
-          type: string
-      required:
-      - uid
-      - type
-      - amount
-      - currency
-      - holdingUid
-      type: object
-      x-tags:
-      - Holdings
-    Extension:
-      description: Extension schema — one historical extension of an extendable holding.
-      properties:
-        date:
-          description: Date the extension took effect
+          - 5.5
+          type:
+          - number
+          - 'null'
+        indicativeYield:
+          description: Indicative yield (annualised APY).
+          examples:
+          - 5.5
+          type: number
+        issueDate:
+          description: Issue date of the FTF
           examples:
           - '2024-01-01'
           format: date
           type: string
-        finalYield:
-          description: Final period yield, annualised APY (set on the final extension only).
+        maturityDate:
+          description: Maturity date of the FTF
           examples:
-          - 5
+          - '2025-01-01'
+          format: date
+          type: string
+        maximum:
+          description: Maximum Investment amount (in Millions)
+          examples:
+          - 100
+          type: number
+        minExtensions:
+          description: Minimum extensions to remove dropdown rate (extendables only)
+          examples:
+          - 7
+          type:
+          - integer
+          - 'null'
+        minimum:
+          description: Minimum investment amount (in Millions)
+          examples:
+          - 10
           type:
           - number
           - 'null'
-        maturity:
-          description: Maturity date set by this extension
+        nbPenaltyExtensions:
+          description: Minimum extensions to remove penalty spread (extendables only)
           examples:
-          - '2024-02-01'
+          - 7
+          type:
+          - integer
+          - 'null'
+        obligorExposureCode:
+          description: Obligor Exposure Code
+          examples:
+          - BACR
+          type: string
+        obligorExposureName:
+          description: Obligor Exposure Name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        optionDate:
+          description: Extension option date (extendables only)
+          examples:
+          - '2025-01-01'
           format: date
-          type: string
-        pricePerShare:
-          description: Price per share at the extension
+          type:
+          - string
+          - 'null'
+        productCode:
+          description: Product Code
           examples:
-          - 1.05
-          type: number
+          - GBP-BACR[GC]-3M
+          type:
+          - string
+          - 'null'
+        restricted:
+          description: Controls if the indication is restricted for a particular entity
+          examples:
+          - false
+          type: boolean
+        sector:
+          description: Product Sector
+          examples:
+          - Financial
+          type:
+          - string
+          - 'null'
+        subscriptionDates:
+          description: List of subscription dates
+          examples:
+          - - '2024-01-01'
+          items:
+            format: date
+            type: string
+          type: array
+        term:
+          description: The product term
+          examples:
+          - 3m
+          type: string
+        type:
+          description: FTF type
+          examples:
+          - Fixed
+          type: string
         uid:
-          description: Extension uid
+          description: Indication uid
           examples:
-          - bcee2bb8569d406c9251dcc9bee38aff
+          - 8ca8f50d3ef44a43962998a5533f0cfa
           type: string
-        yield:
-          description: Yield for this extension period (annualised APY).
-          examples:
-          - 5
-          type: number
       required:
       - uid
-      - date
-      - maturity
-      - yield
-      - pricePerShare
+      - type
+      - currency
+      - issueDate
+      - subscriptionDates
+      - cutoffTime
+      - maturityDate
+      - indicativeYield
+      - maximum
+      - cellCode
+      - obligorExposureCode
+      - obligorExposureName
+      - enabled
+      - term
+      - restricted
+      - calendars
+      - enforceMinimum
+      - enforceMaximum
+      type: object
+      x-tags:
+      - Indications
+    MaturityActionEnum:
+      enum:
+      - ROLL
+      - SWITCH
+      - HOLD
+      - REDEEM
+      type: string
+      x-tags:
+      - Holdings
+    PaginatedHoldings:
+      description: PaginatedHoldings schema.
+      properties:
+        holdings:
+          items:
+            $ref: '#/components/schemas/Holding'
+          type: array
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        valueDate:
+          description: Date of the response (London timezone)
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+      required:
+      - pageInfo
+      - holdings
+      - valueDate
       type: object
       x-tags:
       - Holdings
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      type: object
+    ReasonEnum:
+      enum:
+      - Funds returning shortly
+      - Better terms elsewhere
+      - Receipt of interest payment
+      - Switching FTF product
+      - Treasury Operations changed
+      - Need proceeds
+      type: string
+      x-tags:
+      - Tasks
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

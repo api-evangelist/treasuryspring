@@ -248,6 +248,281 @@ paths:
         source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/validate' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"entityCode\": \"TEST0001\",\n        \"indicationUid\": \"539e30e363b549bf80a0961fd0242809\",\n        \"amount\": 1000,\n        \"maturityAction\": \"ROLL\",\n        \"subscriptionDate\": \"2024-01-01\",\n        \"source\": \"As per Master Subscription Agreement\"\n    }'\n"
 components:
   schemas:
+    PaginatedSubscriptions:
+      description: PaginatedSubscriptions schema.
+      properties:
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        subscriptions:
+          items:
+            $ref: '#/components/schemas/Subscription'
+          type: array
+      required:
+      - pageInfo
+      - subscriptions
+      type: object
+      x-tags:
+      - Subscriptions
+    Subscription:
+      description: Subscription schema.
+      properties:
+        amount:
+          description: Subscription amount
+          examples:
+          - 1000
+          type: number
+        cellCode:
+          description: Cell code
+          examples:
+          - Example-IC
+          type: string
+        currency:
+          description: Subscription currency
+          examples:
+          - GBP
+          type: string
+        cutoffDatetime:
+          description: Cut-off datetime for this subscription (timezone aware). Last point at which the subscription's maturity action can be changed before TreasurySpring locks it in.
+          examples:
+          - '2024-01-01T12:15:00'
+          format: date-time
+          type: string
+        entityCode:
+          description: Subscribing Entity Code
+          examples:
+          - TEST0001
+          type: string
+        holdingUid:
+          description: Holding uid
+          examples:
+          - 6e69e21342a24bbdaf9fe4e8a9995fda
+          type:
+          - string
+          - 'null'
+        indicationUid:
+          description: Indication uid
+          examples:
+          - ef8b318a15b04784ba86c8667727d78b
+          type:
+          - string
+          - 'null'
+        maturityAction:
+          description: Maturity action
+          examples:
+          - Roll
+          type: string
+        maturityDate:
+          description: Date the holding will mature
+          examples:
+          - '2025-01-01'
+          format: date
+          type: string
+        obligorExposureCode:
+          description: Obligor exposure code
+          examples:
+          - BACR[GC]
+          type: string
+        obligorExposureName:
+          description: Obligor exposure name
+          examples:
+          - Barclays Bank Plc [Gov secured]
+          type: string
+        productCode:
+          description: Product code
+          examples:
+          - GBP-BACR[GC]-3M
+          type: string
+        releaserEmail:
+          description: Releaser email
+          examples:
+          - example@treasuryspring.com
+          type:
+          - string
+          - 'null'
+        signerEmail:
+          description: Signer email
+          examples:
+          - example@treasuryspring.com
+          type:
+          - string
+          - 'null'
+        source:
+          description: Source of funds
+          examples:
+          - As per Master Subscription Agreement
+          type: string
+        status:
+          $ref: '#/components/schemas/SubscriptionStatusEnum'
+          description: Status of the subscription
+          examples:
+          - PENDING
+        subscriptionDate:
+          description: The date to subscribe to the indication
+          examples:
+          - '2024-01-01'
+          format: date
+          type: string
+        uid:
+          description: Subscription uid
+          examples:
+          - 8a1f37f521f146dbaa4a333d0bc26158
+          type: string
+        yield:
+          description: Yield agreed at subscribe time (annualised APY).
+          examples:
+          - 5
+          type:
+          - number
+          - 'null'
+      required:
+      - uid
+      - amount
+      - entityCode
+      - maturityAction
+      - source
+      - subscriptionDate
+      - cutoffDatetime
+      - status
+      - currency
+      - cellCode
+      - maturityDate
+      - obligorExposureCode
+      - obligorExposureName
+      - productCode
+      type: object
+      x-tags:
+      - Subscriptions
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    PageInfo:
+      description: PageInfo schema.
+      properties:
+        hasNextPage:
+          description: Boolean indicating if there is a next page of items available
+          examples:
+          - true
+          type:
+          - boolean
+          - 'null'
+        hasPreviousPage:
+          description: boolean indicating if there is a previous page
+          examples:
+          - false
+          type:
+          - boolean
+          - 'null'
+        limit:
+          description: Limit or page size set (used for pagination)
+          examples:
+          - 100
+          type:
+          - integer
+          - 'null'
+        offset:
+          description: Offset of items (used for pagination)
+          examples:
+          - 0
+          type:
+          - integer
+          - 'null'
+        totalCount:
+          description: Total number of items available
+          examples:
+          - 200
+          type:
+          - integer
+          - 'null'
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      - limit
+      - offset
+      - totalCount
+      type: object
+    SubscriptionStatusEnum:
+      enum:
+      - PENDING
+      - ACCEPTED
+      - DECLINED
+      - CANCELLED
+      - EXPIRED
+      type: string
+      x-tags:
+      - Subscriptions
+    ValidateBody:
+      description: 'Body for validating a prospective subscription before committing to it.
+
+
+        Mirrors the fields of a subscription request. The endpoint performs a full
+
+        validation: it confirms the indication is still available and that the amount
+
+        is within the indication''s permitted limits.'
+      properties:
+        amount:
+          description: Proposed subscription amount in the currency of the indication
+          examples:
+          - 1000
+          type: number
+        entityCode:
+          description: Subscribing entity code
+          examples:
+          - TEST0001
+          type: string
+        indicationUid:
+          description: Uid of the indication to validate against.
+          examples:
+          - 539e30e363b549bf80a0961fd0242809
+          type: string
+        maturityAction:
+          $ref: '#/components/schemas/SubscriptionMaturityActionEnum'
+          default: Roll
+          description: Maturity action type
+          examples:
+          - Roll
+        source:
+          default: As per Master Subscription Agreement
+          description: Source of funds
+          examples:
+          - As per Master Subscription Agreement
+          type: string
+        subscriptionDate:
+          description: The date to subscribe to the FTF. A list of possible dates can be found in the subscriptionDates field for the indication. If no date provided, this will default to today.
+          examples:
+          - '2024-01-01'
+          format: date
+          type:
+          - string
+          - 'null'
+      required:
+      - entityCode
+      - indicationUid
+      - amount
+      type: object
+      x-tags:
+      - Subscriptions
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
     Indication:
       description: Indication schema.
       properties:
@@ -448,227 +723,6 @@ components:
       type: object
       x-tags:
       - Indications
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
-    Subscription:
-      description: Subscription schema.
-      properties:
-        amount:
-          description: Subscription amount
-          examples:
-          - 1000
-          type: number
-        cellCode:
-          description: Cell code
-          examples:
-          - Example-IC
-          type: string
-        currency:
-          description: Subscription currency
-          examples:
-          - GBP
-          type: string
-        cutoffDatetime:
-          description: Cut-off datetime for this subscription (timezone aware). Last point at which the subscription's maturity action can be changed before TreasurySpring locks it in.
-          examples:
-          - '2024-01-01T12:15:00'
-          format: date-time
-          type: string
-        entityCode:
-          description: Subscribing Entity Code
-          examples:
-          - TEST0001
-          type: string
-        holdingUid:
-          description: Holding uid
-          examples:
-          - 6e69e21342a24bbdaf9fe4e8a9995fda
-          type:
-          - string
-          - 'null'
-        indicationUid:
-          description: Indication uid
-          examples:
-          - ef8b318a15b04784ba86c8667727d78b
-          type:
-          - string
-          - 'null'
-        maturityAction:
-          description: Maturity action
-          examples:
-          - Roll
-          type: string
-        maturityDate:
-          description: Date the holding will mature
-          examples:
-          - '2025-01-01'
-          format: date
-          type: string
-        obligorExposureCode:
-          description: Obligor exposure code
-          examples:
-          - BACR[GC]
-          type: string
-        obligorExposureName:
-          description: Obligor exposure name
-          examples:
-          - Barclays Bank Plc [Gov secured]
-          type: string
-        productCode:
-          description: Product code
-          examples:
-          - GBP-BACR[GC]-3M
-          type: string
-        releaserEmail:
-          description: Releaser email
-          examples:
-          - example@treasuryspring.com
-          type:
-          - string
-          - 'null'
-        signerEmail:
-          description: Signer email
-          examples:
-          - example@treasuryspring.com
-          type:
-          - string
-          - 'null'
-        source:
-          description: Source of funds
-          examples:
-          - As per Master Subscription Agreement
-          type: string
-        status:
-          $ref: '#/components/schemas/SubscriptionStatusEnum'
-          description: Status of the subscription
-          examples:
-          - PENDING
-        subscriptionDate:
-          description: The date to subscribe to the indication
-          examples:
-          - '2024-01-01'
-          format: date
-          type: string
-        uid:
-          description: Subscription uid
-          examples:
-          - 8a1f37f521f146dbaa4a333d0bc26158
-          type: string
-        yield:
-          description: Yield agreed at subscribe time (annualised APY).
-          examples:
-          - 5
-          type:
-          - number
-          - 'null'
-      required:
-      - uid
-      - amount
-      - entityCode
-      - maturityAction
-      - source
-      - subscriptionDate
-      - cutoffDatetime
-      - status
-      - currency
-      - cellCode
-      - maturityDate
-      - obligorExposureCode
-      - obligorExposureName
-      - productCode
-      type: object
-      x-tags:
-      - Subscriptions
-    SubscriptionMaturityActionEnum:
-      enum:
-      - Roll
-      - Hold
-      - Redeem
-      type: string
-      x-tags:
-      - Subscriptions
-    ValidateBody:
-      description: 'Body for validating a prospective subscription before committing to it.
-
-
-        Mirrors the fields of a subscription request. The endpoint performs a full
-
-        validation: it confirms the indication is still available and that the amount
-
-        is within the indication''s permitted limits.'
-      properties:
-        amount:
-          description: Proposed subscription amount in the currency of the indication
-          examples:
-          - 1000
-          type: number
-        entityCode:
-          description: Subscribing entity code
-          examples:
-          - TEST0001
-          type: string
-        indicationUid:
-          description: Uid of the indication to validate against.
-          examples:
-          - 539e30e363b549bf80a0961fd0242809
-          type: string
-        maturityAction:
-          $ref: '#/components/schemas/SubscriptionMaturityActionEnum'
-          default: Roll
-          description: Maturity action type
-          examples:
-          - Roll
-        source:
-          default: As per Master Subscription Agreement
-          description: Source of funds
-          examples:
-          - As per Master Subscription Agreement
-          type: string
-        subscriptionDate:
-          description: The date to subscribe to the FTF. A list of possible dates can be found in the subscriptionDates field for the indication. If no date provided, this will default to today.
-          examples:
-          - '2024-01-01'
-          format: date
-          type:
-          - string
-          - 'null'
-      required:
-      - entityCode
-      - indicationUid
-      - amount
-      type: object
-      x-tags:
-      - Subscriptions
-    PaginatedSubscriptions:
-      description: PaginatedSubscriptions schema.
-      properties:
-        pageInfo:
-          $ref: '#/components/schemas/PageInfo'
-        subscriptions:
-          items:
-            $ref: '#/components/schemas/Subscription'
-          type: array
-      required:
-      - pageInfo
-      - subscriptions
-      type: object
-      x-tags:
-      - Subscriptions
-    SubscriptionStatusEnum:
-      enum:
-      - PENDING
-      - ACCEPTED
-      - DECLINED
-      - CANCELLED
-      - EXPIRED
-      type: string
-      x-tags:
-      - Subscriptions
     SubscriptionBody:
       description: SubscriptionBody schema.
       properties:
@@ -722,68 +776,14 @@ components:
       type: object
       x-tags:
       - Subscriptions
-    PageInfo:
-      description: PageInfo schema.
-      properties:
-        hasNextPage:
-          description: Boolean indicating if there is a next page of items available
-          examples:
-          - true
-          type:
-          - boolean
-          - 'null'
-        hasPreviousPage:
-          description: boolean indicating if there is a previous page
-          examples:
-          - false
-          type:
-          - boolean
-          - 'null'
-        limit:
-          description: Limit or page size set (used for pagination)
-          examples:
-          - 100
-          type:
-          - integer
-          - 'null'
-        offset:
-          description: Offset of items (used for pagination)
-          examples:
-          - 0
-          type:
-          - integer
-          - 'null'
-        totalCount:
-          description: Total number of items available
-          examples:
-          - 200
-          type:
-          - integer
-          - 'null'
-      required:
-      - hasNextPage
-      - hasPreviousPage
-      - limit
-      - offset
-      - totalCount
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      type: object
+    SubscriptionMaturityActionEnum:
+      enum:
+      - Roll
+      - Hold
+      - Redeem
+      type: string
+      x-tags:
+      - Subscriptions
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

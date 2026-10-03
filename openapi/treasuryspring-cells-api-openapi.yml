@@ -56,26 +56,6 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/cell/Example-IC' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
-    CellDocuments:
-      description: CellDocuments schema.
-      properties:
-        name:
-          description: Document Name
-          examples:
-          - Factsheet
-          type: string
-      required:
-      - name
-      type: object
-      x-tags:
-      - Cells
     Cell:
       description: Cell schema.
       properties:
@@ -107,6 +87,36 @@ components:
       type: object
       x-tags:
       - Cells
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+    CellDocuments:
+      description: CellDocuments schema.
+      properties:
+        name:
+          description: Document Name
+          examples:
+          - Factsheet
+          type: string
+      required:
+      - name
+      type: object
+      x-tags:
+      - Cells
     allowedObligorExposures:
       description: allowedObligorExposures schema.
       properties:
@@ -126,22 +136,12 @@ components:
       type: object
       x-tags:
       - Indications
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
       type: object
   securitySchemes:
     basicAuth:

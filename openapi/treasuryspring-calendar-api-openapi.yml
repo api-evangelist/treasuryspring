@@ -65,6 +65,23 @@ components:
             $ref: '#/components/schemas/ValidationError'
           type: array
       type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
     Holiday:
       description: Holidays schema.
       properties:
@@ -91,23 +108,6 @@ components:
       type: object
       x-tags:
       - Calendar
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      type: object
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'
