@@ -56,13 +56,6 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/obligor-exposure/BACR\\[GC\\]' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
     ValidationError:
       properties:
         loc:
@@ -143,6 +136,13 @@ components:
       type: object
       x-tags:
       - Obligor Exposure
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

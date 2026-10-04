@@ -88,32 +88,6 @@ components:
       - msg
       - type
       type: object
-    DeleteWebhookResponse:
-      properties:
-        email:
-          description: Users Email
-          examples:
-          - example@treasuryspring.com
-          type: string
-        url:
-          description: Webhook URL
-          examples:
-          - https://example.com/webhook
-          type:
-          - string
-          - 'null'
-      required:
-      - email
-      type: object
-      x-tags:
-      - Webhooks
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
     WebhookResponse:
       properties:
         email:
@@ -132,6 +106,13 @@ components:
       type: object
       x-tags:
       - Webhooks
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
     WebhookUrlBody:
       properties:
         url:
@@ -141,6 +122,25 @@ components:
           type: string
       required:
       - url
+      type: object
+      x-tags:
+      - Webhooks
+    DeleteWebhookResponse:
+      properties:
+        email:
+          description: Users Email
+          examples:
+          - example@treasuryspring.com
+          type: string
+        url:
+          description: Webhook URL
+          examples:
+          - https://example.com/webhook
+          type:
+          - string
+          - 'null'
+      required:
+      - email
       type: object
       x-tags:
       - Webhooks

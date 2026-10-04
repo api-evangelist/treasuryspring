@@ -114,38 +114,6 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/entity/TEST0001/permissions' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
-    EntityBankAccount:
-      description: EntityBankAccount schema.
-      properties:
-        currency:
-          description: Bank Account currency
-          examples:
-          - GBP
-          type: string
-        lastDigits:
-          description: last 4 digits of the account number
-          examples:
-          - '1234'
-          type: string
-        uid:
-          description: Bank Account uid
-          examples:
-          - 3e3020d02361470fa5839b2a456102b7
-          type: string
-      required:
-      - uid
-      - currency
-      - lastDigits
-      type: object
-      x-tags:
-      - Entities
-    EntityUserStatus:
-      enum:
-      - Pending
-      - Active
-      type: string
-      x-tags:
-      - Entities
     ValidationError:
       properties:
         loc:
@@ -191,6 +159,31 @@ components:
       type: object
       x-tags:
       - Entities
+    EntityBankAccount:
+      description: EntityBankAccount schema.
+      properties:
+        currency:
+          description: Bank Account currency
+          examples:
+          - GBP
+          type: string
+        lastDigits:
+          description: last 4 digits of the account number
+          examples:
+          - '1234'
+          type: string
+        uid:
+          description: Bank Account uid
+          examples:
+          - 3e3020d02361470fa5839b2a456102b7
+          type: string
+      required:
+      - uid
+      - currency
+      - lastDigits
+      type: object
+      x-tags:
+      - Entities
     EntityAccountManager:
       description: EntityAccountManager schema.
       properties:
@@ -215,6 +208,20 @@ components:
       type: object
       x-tags:
       - Entities
+    EntityUserStatus:
+      enum:
+      - Pending
+      - Active
+      type: string
+      x-tags:
+      - Entities
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+      type: object
     Entity:
       description: Entity schema.
       properties:
@@ -278,13 +285,6 @@ components:
       type: object
       x-tags:
       - Entities
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

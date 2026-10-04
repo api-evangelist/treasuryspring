@@ -202,38 +202,6 @@ paths:
         source: "\ncurl -X PUT 'https://api.treasuryspring.com/api/v1/event/checkpoint/daily-sync' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"initial_cursor\": \"ev1.abc123.xyz789\"\n    }'\n"
 components:
   schemas:
-    GetCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
-      type: object
-      x-tags:
-      - Event Checkpoints
-    PatchCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-      required:
-      - checkpoint
-      type: object
-      x-tags:
-      - Event Checkpoints
-    CheckpointRef:
-      properties:
-        name:
-          description: Name of the checkpoint
-          type: string
-        uid:
-          description: Unique identifier of the checkpoint
-          type: string
-      required:
-      - uid
-      - name
-      type: object
-      x-tags:
-      - Event Checkpoints
     DeleteCheckpointResponse:
       properties:
         checkpoint:
@@ -244,19 +212,6 @@ components:
       required:
       - checkpoint
       - deleted
-      type: object
-      x-tags:
-      - Event Checkpoints
-    UpsertCheckpointResponse:
-      properties:
-        checkpoint:
-          $ref: '#/components/schemas/CheckpointData'
-        created:
-          description: True if the checkpoint was newly created, False if it already existed
-          type: boolean
-      required:
-      - checkpoint
-      - created
       type: object
       x-tags:
       - Event Checkpoints
@@ -271,15 +226,31 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    PutCheckpointBody:
+    PatchCheckpointResponse:
       properties:
-        initial_cursor:
-          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PatchCheckpointBody:
+      properties:
+        expected_checkpoint_version:
+          description: Optional checkpointVersion value from your last read of this checkpoint. If supplied and it no longer matches the current version, the request returns 409 Conflict.
           examples:
-          - ev1....
+          - ec1....
           type:
           - string
           - 'null'
+        new_cursor:
+          description: New cursor token (ev1.*) to advance the checkpoint to
+          examples:
+          - ev1....
+          type: string
+      required:
+      - new_cursor
       type: object
       x-tags:
       - Event Checkpoints
@@ -319,22 +290,51 @@ components:
       type: object
       x-tags:
       - Event Checkpoints
-    PatchCheckpointBody:
+    CheckpointRef:
       properties:
-        expected_checkpoint_version:
-          description: Optional checkpointVersion value from your last read of this checkpoint. If supplied and it no longer matches the current version, the request returns 409 Conflict.
+        name:
+          description: Name of the checkpoint
+          type: string
+        uid:
+          description: Unique identifier of the checkpoint
+          type: string
+      required:
+      - uid
+      - name
+      type: object
+      x-tags:
+      - Event Checkpoints
+    UpsertCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+        created:
+          description: True if the checkpoint was newly created, False if it already existed
+          type: boolean
+      required:
+      - checkpoint
+      - created
+      type: object
+      x-tags:
+      - Event Checkpoints
+    GetCheckpointResponse:
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/CheckpointData'
+      required:
+      - checkpoint
+      type: object
+      x-tags:
+      - Event Checkpoints
+    PutCheckpointBody:
+      properties:
+        initial_cursor:
+          description: Cursor token (ev1.*) to initialise the checkpoint at. Only used when the checkpoint is created — ignored if it already exists. If omitted on creation, defaults to the current end of the event stream.
           examples:
-          - ec1....
+          - ev1....
           type:
           - string
           - 'null'
-        new_cursor:
-          description: New cursor token (ev1.*) to advance the checkpoint to
-          examples:
-          - ev1....
-          type: string
-      required:
-      - new_cursor
       type: object
       x-tags:
       - Event Checkpoints

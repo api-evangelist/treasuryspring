@@ -58,13 +58,6 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/holidays/2025' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-      type: object
     ValidationError:
       properties:
         loc:
@@ -81,6 +74,13 @@ components:
       - loc
       - msg
       - type
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
       type: object
     Holiday:
       description: Holidays schema.

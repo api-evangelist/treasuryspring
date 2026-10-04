@@ -56,6 +56,19 @@ paths:
         source: "\ncurl -X GET 'https://api.treasuryspring.com/api/v1/cell/Example-IC' \\\n    -H 'accept: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf'\n"
 components:
   schemas:
+    CellDocuments:
+      description: CellDocuments schema.
+      properties:
+        name:
+          description: Document Name
+          examples:
+          - Factsheet
+          type: string
+      required:
+      - name
+      type: object
+      x-tags:
+      - Cells
     Cell:
       description: Cell schema.
       properties:
@@ -104,19 +117,6 @@ components:
       - msg
       - type
       type: object
-    CellDocuments:
-      description: CellDocuments schema.
-      properties:
-        name:
-          description: Document Name
-          examples:
-          - Factsheet
-          type: string
-      required:
-      - name
-      type: object
-      x-tags:
-      - Cells
     allowedObligorExposures:
       description: allowedObligorExposures schema.
       properties:
