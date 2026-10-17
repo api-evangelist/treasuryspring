@@ -117,20 +117,23 @@ paths:
         source: "\ncurl -X POST 'https://api.treasuryspring.com/api/v1/task/eab64d0f8h9c48038ce0dk451c77hg98' \\\n    -H 'accept: application/json' \\\n    -H 'Content-Type: application/json' \\\n    -H 'Authorization: Bearer 215ced3397d7049289b0bf6ce72dbbfcf' \\\n    -d '{\n        \"data\": {\n            \"approved\": true\n        }\n    }'\n"
 components:
   schemas:
-    SubmitTaskBody:
-      description: Submit task body schema.
+    ValidationError:
       properties:
-        data:
-          additionalProperties: true
-          description: A JSON object containing the form data to be submitted for the task. The structure of the JSON object depends on the task type and can be found in the task properties.
-          examples:
-          - approved: true
-          type: object
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+        msg:
+          type: string
+        type:
+          type: string
       required:
-      - data
+      - loc
+      - msg
+      - type
       type: object
-      x-tags:
-      - Tasks
     Task:
       description: Task schema.
       properties:
@@ -166,22 +169,12 @@ components:
       type: object
       x-tags:
       - Tasks
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-        msg:
-          type: string
-        type:
-          type: string
-      required:
-      - loc
-      - msg
-      - type
       type: object
     SubmitTaskResponse:
       description: Submit task response schema.
@@ -203,13 +196,20 @@ components:
       type: object
       x-tags:
       - Tasks
-    HTTPValidationError:
+    SubmitTaskBody:
+      description: Submit task body schema.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
+        data:
+          additionalProperties: true
+          description: A JSON object containing the form data to be submitted for the task. The structure of the JSON object depends on the task type and can be found in the task properties.
+          examples:
+          - approved: true
+          type: object
+      required:
+      - data
       type: object
+      x-tags:
+      - Tasks
   securitySchemes:
     basicAuth:
       description: 'Base64-encoded `client_id:client_secret` (sent as `Authorization: Basic <base64>`). Used by the OAuth token-exchange endpoint.'

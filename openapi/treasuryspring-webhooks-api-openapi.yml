@@ -88,10 +88,10 @@ components:
       - msg
       - type
       type: object
-    WebhookResponse:
+    DeleteWebhookResponse:
       properties:
         email:
-          description: Email
+          description: Users Email
           examples:
           - example@treasuryspring.com
           type: string
@@ -99,10 +99,11 @@ components:
           description: Webhook URL
           examples:
           - https://example.com/webhook
-          type: string
+          type:
+          - string
+          - 'null'
       required:
       - email
-      - url
       type: object
       x-tags:
       - Webhooks
@@ -125,10 +126,10 @@ components:
       type: object
       x-tags:
       - Webhooks
-    DeleteWebhookResponse:
+    WebhookResponse:
       properties:
         email:
-          description: Users Email
+          description: Email
           examples:
           - example@treasuryspring.com
           type: string
@@ -136,11 +137,10 @@ components:
           description: Webhook URL
           examples:
           - https://example.com/webhook
-          type:
-          - string
-          - 'null'
+          type: string
       required:
       - email
+      - url
       type: object
       x-tags:
       - Webhooks
