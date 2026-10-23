@@ -842,3 +842,9 @@ x-tagGroups:
 - name: MCP
   tags:
   - MCP
+x-provenance:
+  method: harvested
+  publisher: TreasurySpring
+  source: https://docs.treasuryspring.com/swagger.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
