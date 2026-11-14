@@ -33,7 +33,7 @@ accessModel:
   - authentication
   - security
   - sandbox
-  generated: '2026-11-06'
+  generated: '2026-11-13'
   method: derived
 image: https://treasuryspring.com/hubfs/cropped-TS_Icon_Master_01-32x32.png
 url: https://raw.githubusercontent.com/api-evangelist/treasuryspring/refs/heads/main/apis.yml
